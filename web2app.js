@@ -537,6 +537,9 @@ async function pushToGitHub(ghCommand = null) {
   const spinner = ora('Checking repository status...').start();
   
   try {
+    // Ensure the current auth token has required scopes for repo creation
+    await ensureGitHubRepoScopes(actualGhCommand);
+
     // Check if repository exists and has files
     const remoteUrl = execSync('git remote get-url origin', { encoding: 'utf8' }).trim();
     const repoMatch = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
@@ -594,7 +597,7 @@ async function pushToGitHub(ghCommand = null) {
             // Remote doesn't exist, that's fine
           }
           
-          // Create repository without --remote=origin to avoid conflicts
+          // Try to create the repository and push in one go (fast path)
           execSync(`${actualGhCommand} repo create ${cleanRepoName} --public --source=. --push`, { stdio: 'pipe' });
           spinner.succeed(chalk.green('✅ Created GitHub repository and pushed successfully!'));
           console.log(chalk.blue('🔄 GitHub Actions is now building your APK...'));
@@ -604,8 +607,8 @@ async function pushToGitHub(ghCommand = null) {
           try {
             console.log(chalk.yellow('🔄 Trying alternative repository creation method...'));
             
-            // Create repository without source
-            execSync(`${actualGhCommand} repo create ${cleanRepoName} --public`, { stdio: 'pipe' });
+            // Attempt creation via gh api (works even if repo create shorthand fails due to scope parsing)
+            await createRepoViaApi(actualGhCommand, cleanRepoName, /*isPrivate*/ false);
             
             // Add remote manually
             execSync(`git remote add origin https://github.com/${username}/${cleanRepoName}.git`, { stdio: 'pipe' });
@@ -646,6 +649,63 @@ async function pushToGitHub(ghCommand = null) {
   } catch (error) {
     spinner.fail(chalk.red('❌ Failed to push to GitHub: ' + error.message));
     throw error;
+  }
+}
+
+// Ensure the authenticated GitHub CLI session has scopes to create repositories and run workflows
+async function ensureGitHubRepoScopes(ghCommand) {
+  try {
+    // Check current auth status; if missing, this will throw above
+    execSync(`${ghCommand} auth status`, { stdio: 'pipe' });
+
+    // Try a lightweight API call to fetch the current token scopes
+    // GitHub CLI exposes token scopes via the headers from an API call
+    // We use the rate_limit endpoint because it's safe and fast
+    const output = execSync(`${ghCommand} api rate_limit -i`, { encoding: 'utf8', stdio: 'pipe' });
+    // Example header line we care about: x-oauth-scopes: repo, workflow
+    const scopeLine = output.split('\n').find(line => /x-oauth-scopes:/i.test(line)) || '';
+    const scopes = scopeLine.split(':').slice(1).join(':').trim().toLowerCase();
+
+    const required = ['repo', 'workflow'];
+    const missing = required.filter(scope => !scopes.includes(scope));
+
+    if (missing.length > 0) {
+      console.log(chalk.yellow(`\n🔐 Missing GitHub token scopes: ${missing.join(', ')}`));
+      console.log(chalk.blue('Attempting to refresh GitHub CLI token with required scopes...'));
+      try {
+        // Prefer refresh when available
+        execSync(`${ghCommand} auth refresh -s repo -s workflow`, { stdio: 'pipe' });
+      } catch (e) {
+        // Fall back to a login requesting scopes
+        execSync(`${ghCommand} auth login -s repo -s workflow`, { stdio: 'inherit' });
+      }
+      console.log(chalk.green('✅ GitHub token scopes updated.'));
+    }
+  } catch (e) {
+    // If anything goes wrong here, continue; repo creation path will surface errors clearly
+  }
+}
+
+// Create a repository using GitHub REST via gh api. Works for personal accounts.
+async function createRepoViaApi(ghCommand, repoName, isPrivate) {
+  try {
+    // Create under the authenticated user account
+    execSync(`${ghCommand} api -X POST user/repos -f name=${repoName} -F private=${isPrivate ? 'true' : 'false'}`, { stdio: 'pipe' });
+  } catch (e) {
+    // If user selected an organization earlier (remote URL parsing), try creating under that org
+    // Detect current remote (if any) to infer owner; otherwise rethrow
+    try {
+      const remoteUrl = execSync('git remote get-url origin', { encoding: 'utf8', stdio: 'pipe' }).trim();
+      const match = remoteUrl.match(/github\.com[:/]([^/]+)\//);
+      const owner = match ? match[1] : null;
+      if (owner) {
+        execSync(`${ghCommand} api -X POST orgs/${owner}/repos -f name=${repoName} -F private=${isPrivate ? 'true' : 'false'}`, { stdio: 'pipe' });
+        return;
+      }
+    } catch (_) {
+      // ignore and rethrow original
+    }
+    throw e;
   }
 }
 
