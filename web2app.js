@@ -409,6 +409,10 @@ async function addCustomWebsite() {
         }
         
         console.log(chalk.green('✅ Website files copied successfully!'));
+        try {
+          execSync('git add www', { stdio: 'pipe' });
+          execSync('git commit -m "chore: add website files to www"', { stdio: 'pipe' });
+        } catch (_) {}
       }
     } else {
       // Ask for manual path if no files found
@@ -421,6 +425,10 @@ async function addCustomWebsite() {
         // Copy files
         await fs.copy(websitePath, 'www');
         console.log(chalk.green('✅ Website files copied successfully!'));
+        try {
+          execSync('git add www', { stdio: 'pipe' });
+          execSync('git commit -m "chore: add website files to www"', { stdio: 'pipe' });
+        } catch (_) {}
       } else {
         console.log(chalk.red('❌ Path not found. Please check the path and try again.'));
         throw new Error('Website path not found');
@@ -509,6 +517,11 @@ async function customizeAppSettings() {
 
   await fs.writeJson('apk-config.json', config, { spaces: 2 });
   console.log(chalk.green('✅ App configuration saved!'));
+  // Stage apk-config.json immediately so it gets pushed
+  try {
+    execSync('git add apk-config.json', { stdio: 'pipe' });
+    execSync('git commit -m "chore: save user apk-config.json"', { stdio: 'pipe' });
+  } catch (_) {}
   
   // Show summary of what user entered
   console.log(chalk.blue('\n📋 Your App Configuration Summary:'));
