@@ -37,16 +37,20 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 | Section | Description |
 |---------|-------------|
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
-| [🚀 Quick Start (5 Minutes)](#-quick-start-5-minutes) | Get started immediately |
-| [📖 Step-by-Step Guide](#-step-by-step-guide) | Detailed instructions |
-| [⚙️ Manual Setup](#️-manual-setup) | Advanced configuration |
-| [🎨 Customize Your App](#-customize-your-app) | Icons, splash screens, and more |
-| [📱 Commands Reference](#-commands-reference) | All available commands |
-| [🔧 Troubleshooting](#-troubleshooting) | Fix common issues |
-| [❓ Frequently Asked Questions](#-frequently-asked-questions) | Common questions answered |
-| [🎯 Advanced Features](#-advanced-features) | Pro tips and tricks |
-| [🤝 Contributing](#-contributing) | Help improve this project |
+| [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
+| [🛠️ The Magic Commands](#️-the-magic-commands) | All available commands |
+| [🚨 Problems and Solutions](#-problems-and-solutions-dont-worry) | Fix common issues |
+| [📋 What Happens After You Enter Your Settings](#-what-happens-after-you-enter-your-settings) | Detailed process explanation |
+| [🎨 Making Your App Look Amazing](#-making-your-app-look-amazing) | Icons, splash screens, and more |
+| [📱 Installing Your App on Android](#-installing-your-app-on-android) | How to install your APK |
+| [🏗️ How It All Works](#-how-it-all-works-the-magic-behind-the-scenes) | Technical explanation |
+| [🎓 Learning More](#-learning-more) | Additional resources |
+| [🚀 Advanced Features](#-advanced-features) | Pro tips and tricks |
+| [🎯 Tips and Tricks](#-tips-and-tricks) | Expert advice |
+| [🆘 Getting Help](#-getting-help) | Support and assistance |
+| [🎉 Success Stories](#-success-stories) | Real user examples |
 | [📄 License](#-license) | MIT License information |
+| [🤝 Contributing](#-contributing) | Help improve this project |
 
 ---
 
