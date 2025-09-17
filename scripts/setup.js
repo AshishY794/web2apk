@@ -69,6 +69,16 @@ async function setup() {
       // Try to continue anyway
     }
     
+    // Update app configuration (icon, splash, etc.) after platform is created
+    spinner.text = 'Applying app customization...';
+    try {
+      execSync('node scripts/update-config.js', { stdio: 'pipe' });
+      console.log('✅ App customization applied');
+    } catch (error) {
+      console.log('App customization failed:', error.message);
+      // Continue anyway
+    }
+    
     spinner.succeed(chalk.green('Setup completed successfully!'));
     console.log(chalk.blue('\n📱 Your website is ready to be converted to APK!'));
     console.log(chalk.yellow('Run: npm run buildapk'));

@@ -84,6 +84,11 @@ jobs:
         fi
         
         echo "✅ Android platform verified successfully"
+        
+        # Update app icon and splash after platform is created
+        echo "Updating app icon and splash..."
+        node scripts/update-config.js
+        echo "✅ App customization completed"
       
     - name: Cache Gradle packages
       uses: actions/cache@v3

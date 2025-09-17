@@ -74,6 +74,14 @@ async function updateAppIcon(iconConfig) {
   const iconPath = iconConfig.path;
   const androidResPath = 'android/app/src/main/res';
   
+  // Verify icon file exists
+  if (!await fs.pathExists(iconPath)) {
+    console.log(chalk.yellow(`⚠️  Icon file not found: ${iconPath}`));
+    return;
+  }
+  
+  console.log(chalk.gray(`📱 Copying icon from: ${iconPath}`));
+  
   // Create directories if they don't exist
   const directories = [
     `${androidResPath}/mipmap-mdpi`,
@@ -87,7 +95,7 @@ async function updateAppIcon(iconConfig) {
     await fs.ensureDir(dir);
   }
 
-  // Copy icon to all density folders (just copy the same file to all densities)
+  // Copy icon to all density folders
   const densityFolders = [
     'mipmap-mdpi',
     'mipmap-hdpi', 
@@ -99,9 +107,25 @@ async function updateAppIcon(iconConfig) {
   for (const folder of densityFolders) {
     const targetPath = `${androidResPath}/${folder}/ic_launcher.png`;
     await fs.copy(iconPath, targetPath);
+    console.log(chalk.gray(`  ✅ Copied to ${folder}/ic_launcher.png`));
   }
 
-  console.log(chalk.green('✅ App icon updated'));
+  // Also copy to drawable folders for better compatibility
+  const drawableDirs = [
+    `${androidResPath}/drawable`,
+    `${androidResPath}/drawable-hdpi`,
+    `${androidResPath}/drawable-xhdpi`,
+    `${androidResPath}/drawable-xxhdpi`,
+    `${androidResPath}/drawable-xxxhdpi`
+  ];
+
+  for (const dir of drawableDirs) {
+    await fs.ensureDir(dir);
+    const targetPath = `${dir}/ic_launcher.png`;
+    await fs.copy(iconPath, targetPath);
+  }
+
+  console.log(chalk.green('✅ App icon updated successfully'));
 }
 
 async function updateSplashScreen(splashConfig) {
