@@ -408,6 +408,28 @@ async function addCustomWebsite() {
           }
         }
         
+        // Also copy icon and splash files if they exist
+        const iconFiles = ['icon.png', 'icon.jpg', 'icon.jpeg', 'icon.svg'];
+        const splashFiles = ['splash.png', 'splash.jpg', 'splash.jpeg', 'splash.svg'];
+        
+        for (const iconFile of iconFiles) {
+          const iconPath = path.join(parentDir, iconFile);
+          if (await fs.pathExists(iconPath)) {
+            await fs.copy(iconPath, 'www/icon.png');
+            console.log(chalk.gray(`🖼️  Copied icon: ${iconFile} → www/icon.png`));
+            break; // Only copy the first icon found
+          }
+        }
+        
+        for (const splashFile of splashFiles) {
+          const splashPath = path.join(parentDir, splashFile);
+          if (await fs.pathExists(splashPath)) {
+            await fs.copy(splashPath, 'www/splash.png');
+            console.log(chalk.gray(`🌅 Copied splash: ${splashFile} → www/splash.png`));
+            break; // Only copy the first splash found
+          }
+        }
+        
         console.log(chalk.green('✅ Website files copied successfully!'));
         try {
           execSync('git add www', { stdio: 'pipe' });
@@ -424,6 +446,29 @@ async function addCustomWebsite() {
         
         // Copy files
         await fs.copy(websitePath, 'www');
+        
+        // Also check for icon and splash files in the copied directory
+        const iconFiles = ['icon.png', 'icon.jpg', 'icon.jpeg', 'icon.svg'];
+        const splashFiles = ['splash.png', 'splash.jpg', 'splash.jpeg', 'splash.svg'];
+        
+        for (const iconFile of iconFiles) {
+          const iconPath = path.join('www', iconFile);
+          if (await fs.pathExists(iconPath)) {
+            await fs.copy(iconPath, 'www/icon.png');
+            console.log(chalk.gray(`🖼️  Found icon: ${iconFile} → www/icon.png`));
+            break;
+          }
+        }
+        
+        for (const splashFile of splashFiles) {
+          const splashPath = path.join('www', splashFile);
+          if (await fs.pathExists(splashPath)) {
+            await fs.copy(splashPath, 'www/splash.png');
+            console.log(chalk.gray(`🌅 Found splash: ${splashFile} → www/splash.png`));
+            break;
+          }
+        }
+        
         console.log(chalk.green('✅ Website files copied successfully!'));
         try {
           execSync('git add www', { stdio: 'pipe' });
