@@ -42,13 +42,17 @@ async function setup() {
       }
     }
     
-    // Initialize Capacitor
+    // Initialize Capacitor (skip when config exists or project initialized)
+    const hasCapConfig = await fs.pathExists('capacitor.config.ts') || await fs.pathExists('capacitor.config.json') || await fs.pathExists('capacitor.config.js');
     spinner.text = 'Initializing Capacitor...';
     try {
-      execSync('npx cap init "Web2App" "com.example.web2app"', { stdio: 'pipe' });
+      if (!hasCapConfig) {
+        execSync('npx cap init "Web2App" "com.example.web2app"', { stdio: 'pipe' });
+      } else {
+        console.log('Capacitor already initialized');
+      }
     } catch (error) {
-      // Capacitor might already be initialized
-      console.log('Capacitor already initialized or init failed:', error.message);
+      console.log('Capacitor init skipped:', error.message);
     }
     
     // Add Android platform

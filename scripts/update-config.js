@@ -45,14 +45,16 @@ async function updateConfig() {
       console.log(chalk.green('✅ Updated package.json'));
     }
 
-    // Handle app icon
-    if (config.icon.enabled && await fs.pathExists(config.icon.path)) {
-      await updateAppIcon(config.icon);
+    // Handle app icon (guarded)
+    const iconCfg = config.icon || {};
+    if (iconCfg.enabled && iconCfg.path && await fs.pathExists(iconCfg.path)) {
+      await updateAppIcon(iconCfg);
     }
 
-    // Handle splash screen
-    if (config.splash.enabled && await fs.pathExists(config.splash.path)) {
-      await updateSplashScreen(config.splash);
+    // Handle splash screen (supports both splash and splashScreen shapes)
+    const splashCfg = (config.splash || config.splashScreen) || {};
+    if (splashCfg.enabled && splashCfg.path && await fs.pathExists(splashCfg.path)) {
+      await updateSplashScreen(splashCfg);
     }
 
     console.log(chalk.green('🎉 APK configuration updated successfully!'));

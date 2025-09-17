@@ -303,13 +303,8 @@ async function addCustomWebsite() {
       const existingFiles = await fs.readdir('www');
       if (existingFiles.length > 0) {
         console.log(chalk.yellow(`⚠️  Found existing files in www/: ${existingFiles.join(', ')}`));
-        const replaceChoice = await askQuestion('Do you want to replace existing files? (y/n): ');
-        if (replaceChoice.toLowerCase() === 'y' || replaceChoice.toLowerCase() === 'yes') {
-          console.log(chalk.blue('🗑️  Clearing existing files...'));
-          await fs.emptyDir('www');
-        } else {
-          console.log(chalk.blue('📁 Keeping existing files, will add new ones...'));
-        }
+        // Do NOT clear www anymore; always keep existing files (like manifest.json, sw.js)
+        console.log(chalk.blue('📁 Keeping existing files, will add new ones...'));
       }
     }
     
@@ -394,8 +389,8 @@ async function addCustomWebsite() {
         for (const file of foundFiles) {
           const sourcePath = path.join(parentDir, file);
           const destPath = path.join('www', file);
-          await fs.copy(sourcePath, destPath);
-          console.log(chalk.gray(`📄 Copied: ${file}`));
+          await fs.copy(sourcePath, destPath, { overwrite: false });
+          console.log(chalk.gray(`📄 Copied (no overwrite): ${file}`));
         }
         
         // Also copy any other HTML, CSS, JS files
@@ -406,7 +401,7 @@ async function addCustomWebsite() {
           
           if (stat.isFile() && (file.endsWith('.html') || file.endsWith('.css') || file.endsWith('.js'))) {
             const destPath = path.join('www', file);
-            if (!await fs.pathExists(destPath)) { // Don't overwrite already copied files
+            if (!await fs.pathExists(destPath)) { // Don't overwrite existing files
               await fs.copy(filePath, destPath);
               console.log(chalk.gray(`📄 Copied: ${file}`));
             }
@@ -504,9 +499,11 @@ async function customizeAppSettings() {
       enabled: false,
       path: "www/icon.png"
     },
-    splashScreen: {
-      backgroundColor: "#ffffff",
-      imageUrl: "www/splash.png"
+    // Use unified 'splash' object that update-config.js also supports
+    splash: {
+      enabled: false,
+      path: "www/splash.png",
+      color: "#ffffff"
     }
   };
 
