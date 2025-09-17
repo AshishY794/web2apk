@@ -54,13 +54,23 @@ jobs:
           echo "Capacitor already initialized (config file present)"
         fi
 
+        # Clean up existing Android platform if it exists to ensure a fresh add
+        if [ -d "android" ]; then
+          echo "Removing existing Android platform for a clean re-add..."
+          rm -rf android
+        fi
+
         # Add Android platform
-        npx cap add android || echo "Android platform already exists"
+        echo "Adding Android platform..."
+        npx cap add android
+        echo "✅ Android platform added successfully"
 
         # Sync files
+        echo "Syncing Capacitor files..."
         npx cap sync
+        echo "✅ Capacitor sync completed"
         
-        # Verify Android platform was created
+        # Verify Android platform was created properly
         if [ ! -d "android" ]; then
           echo "Error: Android platform not created" >&2
           exit 1
@@ -68,8 +78,12 @@ jobs:
         
         if [ ! -f "android/gradlew" ]; then
           echo "Error: gradlew not found in android directory" >&2
+          echo "Android directory contents:" >&2
+          ls -la android/ >&2
           exit 1
         fi
+        
+        echo "✅ Android platform verified successfully"
       
     - name: Cache Gradle packages
       uses: actions/cache@v3

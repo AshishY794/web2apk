@@ -43,14 +43,21 @@ async function setup() {
       console.log('Capacitor init skipped:', error.message);
     }
     
+    // Clean up existing Android platform if it exists
+    if (await fs.pathExists('android')) {
+      spinner.text = 'Removing existing Android platform...';
+      await fs.remove('android');
+      console.log('🗑️  Removed existing Android platform');
+    }
+
     // Add Android platform
     spinner.text = 'Adding Android platform...';
     try {
       execSync('npx cap add android', { stdio: 'pipe' });
       console.log('✅ Android platform added successfully');
     } catch (error) {
-      // Platform might already exist
-      console.log('Android platform already exists or add failed:', error.message);
+      console.log('❌ Failed to add Android platform:', error.message);
+      throw error;
     }
     
     // Sync files
