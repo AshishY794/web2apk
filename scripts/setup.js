@@ -8,36 +8,24 @@ async function setup() {
   
   try {
     // Create necessary directories
-    await fs.ensureDir('dist');
+    await fs.ensureDir('www');
     await fs.ensureDir('android');
-    await fs.ensureDir('src');
     
     // Check if user has their website files
     const hasIndexHtml = await fs.pathExists('index.html');
     const hasWwwFiles = await fs.pathExists('www/index.html');
-    const hasSrcFiles = await fs.pathExists('src/index.html');
     
     if (!hasIndexHtml && !hasWwwFiles && !hasSrcFiles) {
       spinner.warn('No index.html found. Creating example files...');
       await createExampleFiles();
     }
     
-    // Copy website files to dist
-    if (hasWwwFiles) {
-      // Copy from www folder
-      await fs.copy('www', 'dist');
-    } else if (hasIndexHtml) {
-      // First, ensure dist directory is clean
-      if (await fs.pathExists('dist')) {
-        await fs.remove('dist');
-      }
-      await fs.ensureDir('dist');
-      
-      // Copy individual files instead of the entire directory
-      const filesToCopy = ['index.html', 'style.css', 'script.js', 'manifest.json', 'sw.js'];
-      for (const file of filesToCopy) {
-        if (await fs.pathExists(file)) {
-          await fs.copy(file, `dist/${file}`);
+    // Ensure website exists in www (Capacitor webDir)
+    if (!hasWwwFiles && hasIndexHtml) {
+      await fs.copy('index.html', 'www/index.html');
+      for (const extra of ['style.css', 'script.js', 'manifest.json', 'sw.js']) {
+        if (await fs.pathExists(extra)) {
+          await fs.copy(extra, `www/${extra}`);
         }
       }
     }

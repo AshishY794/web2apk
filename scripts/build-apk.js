@@ -12,7 +12,7 @@ async function buildApk() {
     spinner.text = 'Checking setup...';
     await ensureSetup();
     
-    // Step 2: Copy website files to dist
+    // Step 2: Ensure website files are in webDir (www)
     spinner.text = 'Preparing website files...';
     await prepareWebsiteFiles();
     
@@ -99,31 +99,22 @@ async function prepareWebsiteFiles() {
     throw new Error('No index.html found. Please add your website files to the project.');
   }
   
-  // Ensure dist directory exists
-  await fs.ensureDir('dist');
-  
-  // Copy website files to dist
+  // Ensure www directory exists and contains the site
+  await fs.ensureDir('www');
   if (indexFile === 'www/index.html') {
-    // Copy from www folder
-    await fs.copy('www', 'dist');
+    // Already in place
+    return;
   } else if (indexFile === 'index.html') {
-    // Ensure dist directory is clean
-    if (await fs.pathExists('dist')) {
-      await fs.remove('dist');
-    }
-    await fs.ensureDir('dist');
-    
-    // Copy individual website files
     const filesToCopy = ['index.html', 'style.css', 'script.js', 'manifest.json', 'sw.js'];
     for (const file of filesToCopy) {
-      if (await fs.pathExists(file)) {
-        await fs.copy(file, `dist/${file}`);
+      if (await fs.pathExists(file) && !await fs.pathExists(`www/${file}`)) {
+        await fs.copy(file, `www/${file}`);
       }
     }
   } else {
-    // Copy from src or other directory
+    // Copy from src or other directory into www
     const sourceDir = path.dirname(indexFile);
-    await fs.copy(sourceDir, 'dist');
+    await fs.copy(sourceDir, 'www', { overwrite: false });
   }
 }
 
