@@ -1,0 +1,60 @@
+name: Test Setup
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-setup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Test setup script
+      run: npm run setup
+      
+    - name: Verify Capacitor config
+      run: |
+        test -f capacitor.config.ts
+        echo "✅ Capacitor config exists"
+        
+    - name: Verify Android platform
+      run: |
+        test -d android
+        echo "✅ Android platform exists"
+        
+    - name: Verify website files
+      run: |
+        test -f index.html
+        test -f style.css
+        test -f script.js
+        echo "✅ Website files exist"
+        
+    - name: Test sync
+      run: npx cap sync
+      
+    - name: Verify sync completed
+      run: |
+        test -d dist
+        echo "✅ Sync completed successfully"

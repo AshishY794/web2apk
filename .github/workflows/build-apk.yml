@@ -1,0 +1,119 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Setup Capacitor
+      run: |
+        # Create dist directory and copy files from www folder
+        mkdir -p dist
+        cp www/index.html dist/ 2>/dev/null || echo "www/index.html not found"
+        cp www/style.css dist/ 2>/dev/null || echo "www/style.css not found"
+        cp www/script.js dist/ 2>/dev/null || echo "www/script.js not found"
+        cp www/manifest.json dist/ 2>/dev/null || echo "www/manifest.json not found"
+        cp www/sw.js dist/ 2>/dev/null || echo "www/sw.js not found"
+        
+        # Also copy any additional files from www folder
+        cp -r www/* dist/ 2>/dev/null || echo "No additional files in www folder"
+        
+        # Update configuration if apk-config.json exists
+        if [ -f "apk-config.json" ]; then
+          echo "Updating APK configuration..."
+          node scripts/update-config.js
+        fi
+        
+        # Initialize Capacitor
+        npx cap init "Web2App" "com.example.web2app" || echo "Capacitor already initialized"
+        
+        # Add Android platform
+        npx cap add android || echo "Android platform already exists"
+        
+        # Sync files
+        npx cap sync
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x android/gradlew
+      
+    - name: Build APK
+      run: |
+        cd android
+        ./gradlew assembleDebug
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        
+    - name: Copy APK to root
+      run: |
+        cp android/app/build/outputs/apk/debug/app-debug.apk app-debug.apk
+        
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug-apk
+        path: app-debug.apk
+        retention-days: 30
+        
+    - name: Create Release (on main branch)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      continue-on-error: true
+      run: |
+        # Create release using GitHub CLI (optional - won't fail workflow if it fails)
+        gh release create "v${{ github.run_number }}" app-debug.apk \
+          --title "Release v${{ github.run_number }}" \
+          --notes "🚀 **Automated APK Build**
+          
+          This release contains the latest APK build from commit ${{ github.sha }}
+          
+          **Installation:**
+          1. Download the \`app-debug.apk\` file
+          2. Enable \"Install from unknown sources\" on your Android device
+          3. Install the APK file
+          
+          **Build Details:**
+          - Commit: ${{ github.sha }}
+          - Branch: ${{ github.ref_name }}
+          - Build Number: ${{ github.run_number }}
+          - Build Date: ${{ github.event.head_commit.timestamp }}" \
+          --latest || echo "Release creation failed, but APK is available in artifacts"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

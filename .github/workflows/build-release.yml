@@ -1,0 +1,111 @@
+name: Build Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Run setup
+      run: npm run setup
+      
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Make gradlew executable
+      run: chmod +x android/gradlew
+      
+    - name: Generate keystore
+      run: |
+        keytool -genkey -v -keystore android/app/my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Web2App, OU=Dev, O=Web2App, L=City, S=State, C=US"
+        
+    - name: Configure signing
+      run: |
+        echo "MYAPP_RELEASE_STORE_FILE=my-release-key.keystore" >> android/gradle.properties
+        echo "MYAPP_RELEASE_KEY_ALIAS=my-key-alias" >> android/gradle.properties
+        echo "MYAPP_RELEASE_STORE_PASSWORD=android" >> android/gradle.properties
+        echo "MYAPP_RELEASE_KEY_PASSWORD=android" >> android/gradle.properties
+        
+    - name: Build Release APK
+      run: |
+        cd android
+        ./gradlew assembleRelease
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        
+    - name: Copy Release APK
+      run: |
+        cp android/app/build/outputs/apk/release/app-release.apk app-release.apk
+        
+    - name: Upload Release APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-apk
+        path: app-release.apk
+        retention-days: 90
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: app-release.apk
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: |
+          🚀 **Release APK Build**
+          
+          This release contains a signed APK build from commit ${{ github.sha }}
+          
+          **Installation:**
+          1. Download the `app-release.apk` file
+          2. Enable "Install from unknown sources" on your Android device
+          3. Install the APK file
+          
+          **Build Details:**
+          - Commit: ${{ github.sha }}
+          - Tag: ${{ github.ref_name }}
+          - Build Date: ${{ github.event.head_commit.timestamp }}
+          
+          **Note:** This is a signed release build suitable for distribution.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

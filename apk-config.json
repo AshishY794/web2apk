@@ -1,0 +1,26 @@
+{
+  "appName": "My Web App",
+  "appId": "com.example.mywebapp",
+  "version": "1.0.0",
+  "description": "Converted from web to Android app",
+  "icon": {
+    "enabled": false,
+    "path": "www/icon.png",
+    "sizes": {
+      "mdpi": 48,
+      "hdpi": 72,
+      "xhdpi": 96,
+      "xxhdpi": 144,
+      "xxxhdpi": 192
+    }
+  },
+  "splash": {
+    "enabled": false,
+    "path": "www/splash.png",
+    "color": "#667eea"
+  },
+  "permissions": [
+    "android.permission.INTERNET",
+    "android.permission.ACCESS_NETWORK_STATE"
+  ]
+}
