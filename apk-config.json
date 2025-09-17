@@ -1,8 +1,8 @@
 {
-  "appName": "userapk",
-  "appId": "com.userapk.app",
-  "version": "8.8.8.",
-  "description": "dasfas",
+  "appName": "umaydad",
+  "appId": "com.dafdas.app",
+  "version": "4.0.0",
+  "description": "test teh ",
   "icon": {
     "enabled": true,
     "path": "www/icon.png"
