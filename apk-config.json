@@ -1,8 +1,8 @@
 {
-  "appName": "OGAppgame",
-  "appId": "com.ogappgame.app",
-  "version": "9.9.9",
-  "description": "Tes te ad",
+  "appName": "userapk",
+  "appId": "com.userapk.app",
+  "version": "8.8.8.",
+  "description": "dasfas",
   "icon": {
     "enabled": true,
     "path": "www/icon.png"
