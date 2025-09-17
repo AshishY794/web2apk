@@ -49,12 +49,16 @@ async function updateConfig() {
     const iconCfg = config.icon || {};
     if (iconCfg.enabled && iconCfg.path && await fs.pathExists(iconCfg.path)) {
       await updateAppIcon(iconCfg);
+    } else {
+      console.log(chalk.gray('📱 Skipping icon update (not enabled or file not found)'));
     }
 
     // Handle splash screen (supports both splash and splashScreen shapes)
     const splashCfg = (config.splash || config.splashScreen) || {};
     if (splashCfg.enabled && splashCfg.path && await fs.pathExists(splashCfg.path)) {
       await updateSplashScreen(splashCfg);
+    } else {
+      console.log(chalk.gray('🌅 Skipping splash update (not enabled or file not found)'));
     }
 
     console.log(chalk.green('🎉 APK configuration updated successfully!'));
@@ -83,17 +87,17 @@ async function updateAppIcon(iconConfig) {
     await fs.ensureDir(dir);
   }
 
-  // Copy icon to all density folders
-  const densities = [
-    { folder: 'mipmap-mdpi', size: iconConfig.sizes.mdpi },
-    { folder: 'mipmap-hdpi', size: iconConfig.sizes.hdpi },
-    { folder: 'mipmap-xhdpi', size: iconConfig.sizes.xhdpi },
-    { folder: 'mipmap-xxhdpi', size: iconConfig.sizes.xxhdpi },
-    { folder: 'mipmap-xxxhdpi', size: iconConfig.sizes.xxxhdpi }
+  // Copy icon to all density folders (just copy the same file to all densities)
+  const densityFolders = [
+    'mipmap-mdpi',
+    'mipmap-hdpi', 
+    'mipmap-xhdpi',
+    'mipmap-xxhdpi',
+    'mipmap-xxxhdpi'
   ];
 
-  for (const density of densities) {
-    const targetPath = `${androidResPath}/${density.folder}/ic_launcher.png`;
+  for (const folder of densityFolders) {
+    const targetPath = `${androidResPath}/${folder}/ic_launcher.png`;
     await fs.copy(iconPath, targetPath);
   }
 
@@ -107,14 +111,16 @@ async function updateSplashScreen(splashConfig) {
   const stylesPath = 'android/app/src/main/res/values/styles.xml';
   if (await fs.pathExists(stylesPath)) {
     let styles = await fs.readFile(stylesPath, 'utf8');
+    const splashColor = splashConfig.color || '#ffffff';
     styles = styles.replace(
       /android:color="[^"]*"/,
-      `android:color="${splashConfig.color}"`
+      `android:color="${splashColor}"`
     );
     await fs.writeFile(stylesPath, styles);
+    console.log(chalk.green('✅ Splash screen color updated'));
+  } else {
+    console.log(chalk.yellow('⚠️  styles.xml not found, skipping splash color update'));
   }
-
-  console.log(chalk.green('✅ Splash screen updated'));
 }
 
 if (require.main === module) {

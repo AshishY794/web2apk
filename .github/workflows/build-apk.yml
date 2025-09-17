@@ -54,8 +54,8 @@ jobs:
           echo "Capacitor already initialized (config file present)"
         fi
 
-        # Add Android platform (force add if needed)
-        npx cap add android --force || echo "Android platform already exists"
+        # Add Android platform
+        npx cap add android || echo "Android platform already exists"
 
         # Sync files
         npx cap sync

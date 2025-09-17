@@ -46,7 +46,7 @@ async function setup() {
     // Add Android platform
     spinner.text = 'Adding Android platform...';
     try {
-      execSync('npx cap add android --force', { stdio: 'pipe' });
+      execSync('npx cap add android', { stdio: 'pipe' });
       console.log('✅ Android platform added successfully');
     } catch (error) {
       // Platform might already exist
