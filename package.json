@@ -1,7 +1,7 @@
 {
-  "name": "web2app-converter",
+  "name": "com-example-mywebapp",
   "version": "1.0.0",
-  "description": "Convert your HTML/CSS/JS website to Android APK using Capacitor",
+  "description": "Converted from web to Android app",
   "main": "index.js",
   "scripts": {
     "buildapk": "node scripts/build-apk.js",
@@ -42,4 +42,3 @@
     "ora": "^5.4.1"
   }
 }
-
