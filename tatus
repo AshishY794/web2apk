@@ -1,0 +1,30 @@
+[33m10c19ac[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m debug: add APK verification to confirm custom icons are included in final APK
+[33m49156fc[m chore: save user apk-config.json
+[33m41f542b[m debug: add icon file verification before and after Gradle build to identify if icons are being overwritten
+[33mfc6cf82[m chore: save user apk-config.json
+[33m44ebab5[m fix: enhance icon verification and force AndroidManifest.xml updates for both regular and round icons
+[33m19e4b72[m debug: add icon file size verification to identify if default icons are being used
+[33m13177e0[m chore: save user apk-config.json
+[33m1a954ba[m fix: comprehensive icon fix - add round icon, update app name, and ensure proper Android resource copying
+[33m3374917[m chore: save config and website files
+[33m9c920af[m chore: save user apk-config.json
+[33m426a67b[m chore: add website files to www
+[33me7fd8e5[m fix: enable icon and splash in apk-config.json to apply custom assets
+[33m0af7e01[m fix: improve icon configuration handling and add debugging for icon issues
+[33m2a0ea07[m fix: apply app icon after Android platform creation to ensure custom icons work
+[33m20401a0[m fix: remove corrupted android platform and add fresh to fix gradlew missing error
+[33m93f6a82[m fix: remove invalid --force flag and fix icon configuration error
+[33m644f966[m fix: improve Android platform setup and gradlew error handling
+[33md1f22be[m feat: auto-copy icon/splash from parent directory when user uses default paths
+[33m593e173[m fix: prevent same-file copy error for icon and splash
+[33mad33d9a[m feat: auto-copy icon and splash files during website setup
+[33mbb5ff44[m feat: auto-copy icon/splash files + cleaner build progress display
+[33m88de26f[m feat: auto-copy icon and splash files to www/ with user prompts
+[33me12ab8c[m ci: skip cap init when TS/JS config exists; use www webDir
+[33m6f9daf9[m push: latest web2apk updates
+[33m3a4cf9f[m chore: updates (www webDir, setup/build fixes, auto-stage config)
+[33m3fafea0[m chore(web2app): stage apk-config.json and www files immediately after changes
+[33m069e7d9[m chore(web2app): ensure apk-config.json is staged/committed before push
+[33m3728b61[m fix: guard config fields, skip cap init on TS config, keep www files when copying
+[33md1949e4[m feat(web2app): auto-refresh gh scopes and robust repo creation fallback
+[33m54003d1[m Initial commit: Web2App project
