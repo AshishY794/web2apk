@@ -1,8 +1,8 @@
 {
-  "appName": "umaydad",
-  "appId": "com.dafdas.app",
-  "version": "4.0.0",
-  "description": "test teh ",
+  "appName": "techingoad",
+  "appId": "com.techinfoi.app",
+  "version": "5.5.5",
+  "description": "yrda",
   "icon": {
     "enabled": true,
     "path": "www/icon.png"
