@@ -547,6 +547,7 @@ async function customizeAppSettings() {
           // Check if icon already exists in www/
           if (await fs.pathExists(iconPath)) {
             console.log(chalk.gray('📱 Using existing icon: www/icon.png'));
+            iconEnabled = true; // Ensure enabled flag is set
           } else {
             // Try to find and copy icon from parent directory
             const parentDir = path.resolve('..');
@@ -559,23 +560,28 @@ async function customizeAppSettings() {
                 await fs.copy(parentIconPath, 'www/icon.png');
                 console.log(chalk.green(`✅ Icon copied from parent: ${iconFile} → www/icon.png`));
                 iconFound = true;
+                iconEnabled = true; // Ensure enabled flag is set
                 break;
               }
             }
             
             if (!iconFound) {
               console.log(chalk.yellow('⚠️  No icon found in www/ or parent directory'));
+              iconEnabled = false; // Disable if no icon found
             }
           }
         } else if (await fs.pathExists(iconPath)) {
           await fs.copy(iconPath, 'www/icon.png');
           console.log(chalk.green('✅ Icon copied to www/icon.png'));
+          iconEnabled = true; // Ensure enabled flag is set
         } else {
           console.log(chalk.yellow('⚠️  Icon file not found at: ' + iconPath));
           console.log(chalk.blue('💡 Please place your icon file and run the setup again.'));
+          iconEnabled = false; // Disable if file not found
         }
       } catch (error) {
         console.log(chalk.red('❌ Failed to copy icon: ' + error.message));
+        iconEnabled = false; // Disable on error
       }
     }
 

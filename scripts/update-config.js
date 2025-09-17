@@ -47,10 +47,16 @@ async function updateConfig() {
 
     // Handle app icon (guarded)
     const iconCfg = config.icon || {};
+    console.log(chalk.blue('🔍 Icon configuration:'), JSON.stringify(iconCfg, null, 2));
+    
     if (iconCfg.enabled && iconCfg.path && await fs.pathExists(iconCfg.path)) {
+      console.log(chalk.green('✅ Icon enabled and file exists, updating...'));
       await updateAppIcon(iconCfg);
     } else {
-      console.log(chalk.gray('📱 Skipping icon update (not enabled or file not found)'));
+      console.log(chalk.yellow('⚠️  Skipping icon update:'));
+      console.log(chalk.gray(`  - Enabled: ${iconCfg.enabled}`));
+      console.log(chalk.gray(`  - Path: ${iconCfg.path}`));
+      console.log(chalk.gray(`  - File exists: ${iconCfg.path ? await fs.pathExists(iconCfg.path) : 'N/A'}`));
     }
 
     // Handle splash screen (supports both splash and splashScreen shapes)
@@ -123,6 +129,22 @@ async function updateAppIcon(iconConfig) {
     await fs.ensureDir(dir);
     const targetPath = `${dir}/ic_launcher.png`;
     await fs.copy(iconPath, targetPath);
+  }
+
+  // Update AndroidManifest.xml to ensure it uses the custom icon
+  const manifestPath = 'android/app/src/main/AndroidManifest.xml';
+  if (await fs.pathExists(manifestPath)) {
+    let manifest = await fs.readFile(manifestPath, 'utf8');
+    
+    // Ensure the manifest uses ic_launcher as the icon
+    if (!manifest.includes('android:icon="@mipmap/ic_launcher"')) {
+      manifest = manifest.replace(
+        /android:icon="[^"]*"/,
+        'android:icon="@mipmap/ic_launcher"'
+      );
+      await fs.writeFile(manifestPath, manifest);
+      console.log(chalk.gray('  ✅ Updated AndroidManifest.xml to use custom icon'));
+    }
   }
 
   console.log(chalk.green('✅ App icon updated successfully'));
