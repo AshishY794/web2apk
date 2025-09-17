@@ -534,6 +534,14 @@ async function pushToGitHub(ghCommand = null) {
   const spinner = ora('Checking repository status...').start();
   
   try {
+    // Always stage and attempt a commit so freshly written files (like apk-config.json) are included
+    try {
+      execSync('git add .', { stdio: 'pipe' });
+      execSync('git commit -m "chore: save config and website files"', { stdio: 'pipe' });
+    } catch (e) {
+      // Ignore if there's nothing to commit
+    }
+
     // Ensure the current auth token has required scopes for repo creation
     await ensureGitHubRepoScopes(actualGhCommand);
 
@@ -610,9 +618,9 @@ async function pushToGitHub(ghCommand = null) {
             // Add remote manually
             execSync(`git remote add origin https://github.com/${username}/${cleanRepoName}.git`, { stdio: 'pipe' });
             
-            // Push manually
-            execSync('git add .', { stdio: 'pipe' });
-            execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' });
+            // Push manually (ensure apk-config.json and other files are staged)
+            try { execSync('git add .', { stdio: 'pipe' }); } catch(_) {}
+            try { execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' }); } catch(_) {}
             execSync('git push origin main', { stdio: 'pipe' });
             
             spinner.succeed(chalk.green('✅ Created GitHub repository and pushed successfully!'));
@@ -632,10 +640,12 @@ async function pushToGitHub(ghCommand = null) {
     
     // Normal push process
     spinner.text = 'Adding files to Git...';
-    execSync('git add .', { stdio: 'pipe' });
+    // Add all files including latest apk-config.json
+    try { execSync('git add .', { stdio: 'pipe' }); } catch(_) {}
     
     spinner.text = 'Committing changes...';
-    execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' });
+    // Commit; if nothing to commit, continue gracefully
+    try { execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' }); } catch(_) {}
     
     spinner.text = 'Pushing to GitHub...';
     execSync('git push origin main', { stdio: 'pipe' });
