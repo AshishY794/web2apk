@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Converted from web to Android app",
   "icon": {
-    "enabled": false,
+    "enabled": true,
     "path": "www/icon.png",
     "sizes": {
       "mdpi": 48,
@@ -15,7 +15,7 @@
     }
   },
   "splash": {
-    "enabled": false,
+    "enabled": true,
     "path": "www/splash.png",
     "color": "#667eea"
   },
