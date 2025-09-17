@@ -35,29 +35,28 @@ jobs:
       
     - name: Setup Capacitor
       run: |
-        # Create dist directory and copy files from www folder
-        mkdir -p dist
-        cp www/index.html dist/ 2>/dev/null || echo "www/index.html not found"
-        cp www/style.css dist/ 2>/dev/null || echo "www/style.css not found"
-        cp www/script.js dist/ 2>/dev/null || echo "www/script.js not found"
-        cp www/manifest.json dist/ 2>/dev/null || echo "www/manifest.json not found"
-        cp www/sw.js dist/ 2>/dev/null || echo "www/sw.js not found"
-        
-        # Also copy any additional files from www folder
-        cp -r www/* dist/ 2>/dev/null || echo "No additional files in www folder"
-        
+        # Ensure website is in www/ (Capacitor webDir)
+        if [ ! -f "www/index.html" ]; then
+          echo "Error: www/index.html not found" >&2
+          exit 1
+        fi
+
         # Update configuration if apk-config.json exists
         if [ -f "apk-config.json" ]; then
           echo "Updating APK configuration..."
           node scripts/update-config.js
         fi
-        
-        # Initialize Capacitor
-        npx cap init "Web2App" "com.example.web2app" || echo "Capacitor already initialized"
-        
+
+        # Initialize Capacitor only if no existing config (non-JSON config like TS would break init)
+        if [ ! -f "capacitor.config.ts" ] && [ ! -f "capacitor.config.json" ] && [ ! -f "capacitor.config.js" ]; then
+          npx cap init "Web2App" "com.example.web2app"
+        else
+          echo "Capacitor already initialized (config file present)"
+        fi
+
         # Add Android platform
         npx cap add android || echo "Android platform already exists"
-        
+
         # Sync files
         npx cap sync
       
