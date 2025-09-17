@@ -163,6 +163,20 @@ async function updateAppIcon(iconConfig, fullConfig) {
     console.log(chalk.gray(`  ✅ Updated app name to: ${appName}`));
   }
 
+  // Verify the icon files were actually copied
+  const verifyPath = `${androidResPath}/mipmap-mdpi/ic_launcher.png`;
+  if (await fs.pathExists(verifyPath)) {
+    const stats = await fs.stat(verifyPath);
+    console.log(chalk.gray(`  📊 Icon file size: ${stats.size} bytes`));
+    if (stats.size < 10000) {
+      console.log(chalk.yellow('  ⚠️  Warning: Icon file seems too small, might be default icon'));
+    } else {
+      console.log(chalk.green('  ✅ Icon file size looks good'));
+    }
+  } else {
+    console.log(chalk.red('  ❌ Icon file not found after copying!'));
+  }
+
   console.log(chalk.green('✅ App icon updated successfully'));
 }
 
