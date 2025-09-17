@@ -1,6 +1,6 @@
 # 🚀 Web2App Converter - Complete Guide for Everyone!
 
-[![Build APK](https://github.com/AshishY794/web2appA/actions/workflows/build-apk.yml/badge.svg)](https://github.com/AshishY794/web2appA/actions/workflows/build-apk.yml)
+[![Build APK](https://github.com/AshishY794/web2apk/actions/workflows/build-apk.yml/badge.svg)](https://github.com/AshishY794/web2apk/actions/workflows/build-apk.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **🎉 Turn ANY web project into an Android app in just 5 minutes! No coding experience needed!**
@@ -85,7 +85,7 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 
 ```bash
 # Step 1: Download the magic box
-git clone https://github.com/AshishY794/web2appA.git
+git clone https://github.com/AshishY794/web2apk.git
 cd web2appA
 
 # Step 2: Install dependencies (IMPORTANT!)
@@ -99,7 +99,7 @@ npm run web2app
 
 ```bash
 # Step 1: Download the magic box
-git clone https://github.com/AshishY794/web2appA.git
+git clone https://github.com/AshishY794/web2apk.git
 cd web2appA
 
 # Step 2: Install dependencies (IMPORTANT!)
@@ -123,7 +123,7 @@ If you want to understand every step and do it manually, follow this guide:
 #### **Step 1: Get the Magic Box** 📦
 ```bash
 # This downloads the magic box to your computer
-git clone https://github.com/AshishY794/web2appA.git
+git clone https://github.com/AshishY794/web2apk.git
 cd web2appA
 ```
 
@@ -325,7 +325,7 @@ npm run web2apk getapp
 ```
 ⏳ Build is currently in progress...
 📊 Progress: 31%
-🔗 View progress: https://github.com/AshishY794/web2appA/actions/runs/17765611276
+🔗 View progress: https://github.com/AshishY794/web2apk/actions
 
 🔄 Waiting for build to complete...
 ⏱️  Checking every 30 seconds for updates...
@@ -499,7 +499,7 @@ gh : The term 'gh' is not recognized as the name of a cmdlet, function, script f
 **What you see:**
 ```
 ❌ Latest build failed
-🔗 View error details: https://github.com/AshishY794/web2appA/actions/runs/123456
+🔗 View error details: https://github.com/AshishY794/web2apk/actions
 ```
 
 **Solution:** Check what went wrong! 🔍
@@ -689,7 +689,7 @@ npm run web2app
 
 **Complete setup sequence:**
 ```bash
-git clone https://github.com/AshishY794/web2appA.git
+git clone https://github.com/AshishY794/web2apk.git
 cd web2appA
 npm install          # ← This step is IMPORTANT!
 npm run web2app
@@ -1177,7 +1177,7 @@ You can have different versions:
 ### **If You're Stuck** 🤔
 
 1. **Check this guide** - Most problems are covered here!
-2. **Look at the Issues** - [GitHub Issues](https://github.com/AshishY794/web2appA/issues)
+2. **Look at the Issues** - [GitHub Issues](https://github.com/AshishY794/web2apk/issues)
 3. **Create a new issue** - Describe your problem clearly
 4. **Include details:**
    - What you were trying to do
@@ -1257,7 +1257,7 @@ If this project helped you, please give it a star! ⭐
 ## 📞 Contact
 
 - **GitHub**: [AshishY794](https://github.com/AshishY794)
-- **Repository**: [web2appA](https://github.com/AshishY794/web2appA)
+- **Repository**: [web2apk](https://github.com/AshishY794/web2apk)
 
 **Need help?** Create an issue on GitHub - I'll try to help you!
 
