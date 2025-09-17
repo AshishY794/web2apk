@@ -32,6 +32,24 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 - 🎓 **Students**: Great for school projects
 - 👴 **Grandparents**: Simple enough for anyone!
 
+## 📋 Table of Contents
+
+| Section | Description |
+|---------|-------------|
+| [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
+| [🚀 Quick Start (5 Minutes)](#-quick-start-5-minutes) | Get started immediately |
+| [📖 Step-by-Step Guide](#-step-by-step-guide) | Detailed instructions |
+| [⚙️ Manual Setup](#️-manual-setup) | Advanced configuration |
+| [🎨 Customize Your App](#-customize-your-app) | Icons, splash screens, and more |
+| [📱 Commands Reference](#-commands-reference) | All available commands |
+| [🔧 Troubleshooting](#-troubleshooting) | Fix common issues |
+| [❓ Frequently Asked Questions](#-frequently-asked-questions) | Common questions answered |
+| [🎯 Advanced Features](#-advanced-features) | Pro tips and tricks |
+| [🤝 Contributing](#-contributing) | Help improve this project |
+| [📄 License](#-license) | MIT License information |
+
+---
+
 ## 🌟 What Can Be Converted to APK?
 
 **This tool can convert ANY web project to Android APK!** Here's what's supported:
@@ -94,26 +112,6 @@ npm install
 # Step 3: Run the automated setup
 npm run web2app
 ```
-
-#### **For Command Line Users:**
-
-```bash
-# Step 1: Download the magic box
-git clone https://github.com/AshishY794/web2apk.git
-cd web2appA
-
-# Step 2: Install dependencies (IMPORTANT!)
-npm install
-
-# Step 3: Run the automated setup
-npm run web2app
-```
-
-**What happens:**
-- ✅ Downloads all required tools
-- ✅ Installs GitHub CLI if needed
-- ✅ Guides you through setup
-- ✅ Builds your APK automatically
 
 
 ### 🎮 Adventure 2: Manual Step-by-Step (Learn Everything!)
