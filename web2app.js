@@ -544,10 +544,28 @@ async function customizeAppSettings() {
       // Try to copy icon to www/
       try {
         if (iconPath === 'www/icon.png') {
+          // Check if icon already exists in www/
           if (await fs.pathExists(iconPath)) {
             console.log(chalk.gray('📱 Using existing icon: www/icon.png'));
           } else {
-            console.log(chalk.yellow('⚠️  No icon found at www/icon.png'));
+            // Try to find and copy icon from parent directory
+            const parentDir = path.resolve('..');
+            const iconFiles = ['icon.png', 'icon.jpg', 'icon.jpeg', 'icon.svg'];
+            let iconFound = false;
+            
+            for (const iconFile of iconFiles) {
+              const parentIconPath = path.join(parentDir, iconFile);
+              if (await fs.pathExists(parentIconPath)) {
+                await fs.copy(parentIconPath, 'www/icon.png');
+                console.log(chalk.green(`✅ Icon copied from parent: ${iconFile} → www/icon.png`));
+                iconFound = true;
+                break;
+              }
+            }
+            
+            if (!iconFound) {
+              console.log(chalk.yellow('⚠️  No icon found in www/ or parent directory'));
+            }
           }
         } else if (await fs.pathExists(iconPath)) {
           await fs.copy(iconPath, 'www/icon.png');
@@ -573,10 +591,28 @@ async function customizeAppSettings() {
       // Try to copy splash to www/
       try {
         if (splashPath === 'www/splash.png') {
+          // Check if splash already exists in www/
           if (await fs.pathExists(splashPath)) {
             console.log(chalk.gray('🌅 Using existing splash: www/splash.png'));
           } else {
-            console.log(chalk.yellow('⚠️  No splash found at www/splash.png'));
+            // Try to find and copy splash from parent directory
+            const parentDir = path.resolve('..');
+            const splashFiles = ['splash.png', 'splash.jpg', 'splash.jpeg', 'splash.svg'];
+            let splashFound = false;
+            
+            for (const splashFile of splashFiles) {
+              const parentSplashPath = path.join(parentDir, splashFile);
+              if (await fs.pathExists(parentSplashPath)) {
+                await fs.copy(parentSplashPath, 'www/splash.png');
+                console.log(chalk.green(`✅ Splash copied from parent: ${splashFile} → www/splash.png`));
+                splashFound = true;
+                break;
+              }
+            }
+            
+            if (!splashFound) {
+              console.log(chalk.yellow('⚠️  No splash found in www/ or parent directory'));
+            }
           }
         } else if (await fs.pathExists(splashPath)) {
           await fs.copy(splashPath, 'www/splash.png');
