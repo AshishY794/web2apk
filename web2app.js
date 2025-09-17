@@ -781,6 +781,7 @@ async function createRepoViaApi(ghCommand, repoName, isPrivate) {
 async function waitForBuildAndDownload() {
   console.log(chalk.blue('\n⏳ Waiting for your APK to be built...'));
   console.log(chalk.yellow('This usually takes 5-15 minutes. We\'ll check every 10 seconds.'));
+  console.log(chalk.cyan('🔨 Building Gradle... Building APK...'));
   
   // Wait a bit for the workflow to start
   await new Promise(resolve => setTimeout(resolve, 10000));
@@ -869,14 +870,16 @@ async function waitForBuildCompletion(owner, repo, runId, ghCommand) {
       const createdAt = new Date(runData.createdAt);
       const updatedAt = new Date(runData.updatedAt);
       
-      // Calculate real progress based on time elapsed
+      // Show build status without percentages
       const now = new Date();
       const elapsedMinutes = Math.floor((now - createdAt) / (1000 * 60));
-      const estimatedTotalMinutes = 15; // Average build time
-      const realProgress = Math.min(Math.floor((elapsedMinutes / estimatedTotalMinutes) * 100), 95);
       
-      // Show real progress update
-      process.stdout.write(`\r${chalk.blue('📊 APK Build Progress:')} ${realProgress}% ${chalk.gray(`(${elapsedMinutes}min elapsed, Check ${attempts}/${maxAttempts})`)}`);
+      // Show build status messages
+      let statusMessage = 'Building Gradle...';
+      if (elapsedMinutes > 2) statusMessage = 'Building APK...';
+      if (elapsedMinutes > 5) statusMessage = 'Finalizing build...';
+      
+      process.stdout.write(`\r${chalk.blue('🔨')} ${statusMessage} ${chalk.gray(`(${elapsedMinutes}min elapsed)`)}`);
       
       if (status === 'completed') {
         console.log('\n'); // New line after progress
