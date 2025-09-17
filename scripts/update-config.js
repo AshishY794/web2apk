@@ -138,15 +138,17 @@ async function updateAppIcon(iconConfig, fullConfig) {
   if (await fs.pathExists(manifestPath)) {
     let manifest = await fs.readFile(manifestPath, 'utf8');
     
-    // Ensure the manifest uses ic_launcher as the icon
-    if (!manifest.includes('android:icon="@mipmap/ic_launcher"')) {
-      manifest = manifest.replace(
-        /android:icon="[^"]*"/,
-        'android:icon="@mipmap/ic_launcher"'
-      );
-      await fs.writeFile(manifestPath, manifest);
-      console.log(chalk.gray('  ✅ Updated AndroidManifest.xml to use custom icon'));
-    }
+    // Force update the manifest to use ic_launcher
+    manifest = manifest.replace(
+      /android:icon="[^"]*"/,
+      'android:icon="@mipmap/ic_launcher"'
+    );
+    manifest = manifest.replace(
+      /android:roundIcon="[^"]*"/,
+      'android:roundIcon="@mipmap/ic_launcher_round"'
+    );
+    await fs.writeFile(manifestPath, manifest);
+    console.log(chalk.gray('  ✅ Updated AndroidManifest.xml to use custom icon'));
   }
 
   // Update app name in strings.xml
@@ -165,11 +167,17 @@ async function updateAppIcon(iconConfig, fullConfig) {
 
   // Verify the icon files were actually copied
   const verifyPath = `${androidResPath}/mipmap-mdpi/ic_launcher.png`;
+  const sourceStats = await fs.stat(iconPath);
+  console.log(chalk.gray(`  📊 Source icon size: ${sourceStats.size} bytes`));
+  
   if (await fs.pathExists(verifyPath)) {
     const stats = await fs.stat(verifyPath);
-    console.log(chalk.gray(`  📊 Icon file size: ${stats.size} bytes`));
-    if (stats.size < 10000) {
-      console.log(chalk.yellow('  ⚠️  Warning: Icon file seems too small, might be default icon'));
+    console.log(chalk.gray(`  📊 Copied icon size: ${stats.size} bytes`));
+    
+    if (stats.size === sourceStats.size) {
+      console.log(chalk.green('  ✅ Icon copied successfully - sizes match!'));
+    } else if (stats.size < 10000) {
+      console.log(chalk.yellow('  ⚠️  Warning: Copied icon seems too small, might be default icon'));
     } else {
       console.log(chalk.green('  ✅ Icon file size looks good'));
     }
