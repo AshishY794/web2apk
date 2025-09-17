@@ -51,7 +51,7 @@ async function updateConfig() {
     
     if (iconCfg.enabled && iconCfg.path && await fs.pathExists(iconCfg.path)) {
       console.log(chalk.green('✅ Icon enabled and file exists, updating...'));
-      await updateAppIcon(iconCfg);
+      await updateAppIcon(iconCfg, config);
     } else {
       console.log(chalk.yellow('⚠️  Skipping icon update:'));
       console.log(chalk.gray(`  - Enabled: ${iconCfg.enabled}`));
@@ -74,7 +74,7 @@ async function updateConfig() {
   }
 }
 
-async function updateAppIcon(iconConfig) {
+async function updateAppIcon(iconConfig, fullConfig) {
   console.log(chalk.blue('🎨 Updating app icon...'));
   
   const iconPath = iconConfig.path;
@@ -112,8 +112,10 @@ async function updateAppIcon(iconConfig) {
 
   for (const folder of densityFolders) {
     const targetPath = `${androidResPath}/${folder}/ic_launcher.png`;
+    const roundTargetPath = `${androidResPath}/${folder}/ic_launcher_round.png`;
     await fs.copy(iconPath, targetPath);
-    console.log(chalk.gray(`  ✅ Copied to ${folder}/ic_launcher.png`));
+    await fs.copy(iconPath, roundTargetPath);
+    console.log(chalk.gray(`  ✅ Copied to ${folder}/ic_launcher.png and ic_launcher_round.png`));
   }
 
   // Also copy to drawable folders for better compatibility
@@ -145,6 +147,20 @@ async function updateAppIcon(iconConfig) {
       await fs.writeFile(manifestPath, manifest);
       console.log(chalk.gray('  ✅ Updated AndroidManifest.xml to use custom icon'));
     }
+  }
+
+  // Update app name in strings.xml
+  const stringsPath = 'android/app/src/main/res/values/strings.xml';
+  if (await fs.pathExists(stringsPath)) {
+    let strings = await fs.readFile(stringsPath, 'utf8');
+    // Get app name from the full config that was passed to this function
+    const appName = fullConfig.appName || 'My App';
+    strings = strings.replace(
+      /<string name="app_name">[^<]*<\/string>/,
+      `<string name="app_name">${appName}</string>`
+    );
+    await fs.writeFile(stringsPath, strings);
+    console.log(chalk.gray(`  ✅ Updated app name to: ${appName}`));
   }
 
   console.log(chalk.green('✅ App icon updated successfully'));
