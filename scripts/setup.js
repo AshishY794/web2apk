@@ -15,7 +15,7 @@ async function setup() {
     const hasIndexHtml = await fs.pathExists('index.html');
     const hasWwwFiles = await fs.pathExists('www/index.html');
     
-    if (!hasIndexHtml && !hasWwwFiles && !hasSrcFiles) {
+    if (!hasIndexHtml && !hasWwwFiles) {
       spinner.warn('No index.html found. Creating example files...');
       await createExampleFiles();
     }
@@ -46,7 +46,8 @@ async function setup() {
     // Add Android platform
     spinner.text = 'Adding Android platform...';
     try {
-      execSync('npx cap add android', { stdio: 'pipe' });
+      execSync('npx cap add android --force', { stdio: 'pipe' });
+      console.log('✅ Android platform added successfully');
     } catch (error) {
       // Platform might already exist
       console.log('Android platform already exists or add failed:', error.message);
@@ -147,7 +148,7 @@ async function createExampleFiles() {
 </html>`;
 
   await fs.writeFile('index.html', exampleHtml);
-  await fs.copy('index.html', 'dist/index.html');
+  await fs.copy('index.html', 'www/index.html');
   
   console.log(chalk.green('✅ Created example index.html file'));
 }
