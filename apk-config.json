@@ -1,26 +1,15 @@
 {
-  "appName": "My Web App",
-  "appId": "com.example.mywebapp",
-  "version": "1.0.0",
-  "description": "Converted from web to Android app",
+  "appName": "OGAppgame",
+  "appId": "com.ogappgame.app",
+  "version": "9.9.9",
+  "description": "Tes te ad",
   "icon": {
     "enabled": true,
-    "path": "www/icon.png",
-    "sizes": {
-      "mdpi": 48,
-      "hdpi": 72,
-      "xhdpi": 96,
-      "xxhdpi": 144,
-      "xxxhdpi": 192
-    }
+    "path": "www/icon.png"
   },
   "splash": {
     "enabled": true,
     "path": "www/splash.png",
-    "color": "#667eea"
-  },
-  "permissions": [
-    "android.permission.INTERNET",
-    "android.permission.ACCESS_NETWORK_STATE"
-  ]
+    "color": "#ffffff"
+  }
 }
