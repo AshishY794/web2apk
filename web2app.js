@@ -543,7 +543,13 @@ async function customizeAppSettings() {
       
       // Try to copy icon to www/
       try {
-        if (await fs.pathExists(iconPath)) {
+        if (iconPath === 'www/icon.png') {
+          if (await fs.pathExists(iconPath)) {
+            console.log(chalk.gray('📱 Using existing icon: www/icon.png'));
+          } else {
+            console.log(chalk.yellow('⚠️  No icon found at www/icon.png'));
+          }
+        } else if (await fs.pathExists(iconPath)) {
           await fs.copy(iconPath, 'www/icon.png');
           console.log(chalk.green('✅ Icon copied to www/icon.png'));
         } else {
@@ -566,7 +572,13 @@ async function customizeAppSettings() {
       
       // Try to copy splash to www/
       try {
-        if (await fs.pathExists(splashPath)) {
+        if (splashPath === 'www/splash.png') {
+          if (await fs.pathExists(splashPath)) {
+            console.log(chalk.gray('🌅 Using existing splash: www/splash.png'));
+          } else {
+            console.log(chalk.yellow('⚠️  No splash found at www/splash.png'));
+          }
+        } else if (await fs.pathExists(splashPath)) {
           await fs.copy(splashPath, 'www/splash.png');
           console.log(chalk.green('✅ Splash screen copied to www/splash.png'));
         } else {
