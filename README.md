@@ -38,6 +38,7 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 |---------|-------------|
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
+| [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
 | [🛠️ The Magic Commands](#️-the-magic-commands) | All available commands |
 | [🚨 Problems and Solutions](#-problems-and-solutions-dont-worry) | Fix common issues |
 | [📋 What Happens After You Enter Your Settings](#-what-happens-after-you-enter-your-settings) | Detailed process explanation |
