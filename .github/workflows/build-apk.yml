@@ -113,8 +113,20 @@ jobs:
       
     - name: Build APK
       run: |
+        # Verify icon files before build
+        echo "🔍 Checking icon files before build..."
+        ls -la android/app/src/main/res/mipmap-mdpi/ic_launcher*.png
+        echo "📊 Icon file sizes:"
+        du -h android/app/src/main/res/mipmap-mdpi/ic_launcher*.png
+        
         cd android
         ./gradlew assembleDebug
+        
+        # Verify icon files after build
+        echo "🔍 Checking icon files after build..."
+        ls -la app/src/main/res/mipmap-mdpi/ic_launcher*.png
+        echo "📊 Icon file sizes after build:"
+        du -h app/src/main/res/mipmap-mdpi/ic_launcher*.png
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
         ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
