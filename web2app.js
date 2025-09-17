@@ -475,6 +475,11 @@ async function customizeAppSettings() {
   const customizeChoice = await askQuestion('Do you want to customize your app settings? (y/n): ');
   
   let appName, appId, version, description;
+  let iconEnabled = false;
+  let iconPath = 'www/icon.png';
+  let splashEnabled = false;
+  let splashPath = 'www/splash.png';
+  let splashColor = '#ffffff';
   
   if (customizeChoice.toLowerCase() === 'y' || customizeChoice.toLowerCase() === 'yes') {
     console.log(chalk.blue('\n🎨 Let\'s customize your app!'));
@@ -484,6 +489,50 @@ async function customizeAppSettings() {
     version = await askQuestion('Enter version (or press Enter for "1.0.0"): ') || '1.0.0';
     description = await askQuestion('Enter description (or press Enter for "My converted web app"): ') || 'My converted web app';
     
+    // Optional icon
+    const iconChoice = await askQuestion('Do you want to use a custom app icon? (y/n): ');
+    if (iconChoice.toLowerCase() === 'y' || iconChoice.toLowerCase() === 'yes') {
+      iconEnabled = true;
+      const ip = await askQuestion('Enter icon path (default: www/icon.png): ');
+      if (ip && ip.trim()) iconPath = ip.trim();
+      
+      // Try to copy icon to www/
+      try {
+        if (await fs.pathExists(iconPath)) {
+          await fs.copy(iconPath, 'www/icon.png');
+          console.log(chalk.green('✅ Icon copied to www/icon.png'));
+        } else {
+          console.log(chalk.yellow('⚠️  Icon file not found at: ' + iconPath));
+          console.log(chalk.blue('💡 Please place your icon file and run the setup again.'));
+        }
+      } catch (error) {
+        console.log(chalk.red('❌ Failed to copy icon: ' + error.message));
+      }
+    }
+
+    // Optional splash
+    const splashChoice = await askQuestion('Do you want a splash screen? (y/n): ');
+    if (splashChoice.toLowerCase() === 'y' || splashChoice.toLowerCase() === 'yes') {
+      splashEnabled = true;
+      const sp = await askQuestion('Enter splash image path (default: www/splash.png): ');
+      const sc = await askQuestion('Enter splash background color (default: #ffffff): ');
+      if (sp && sp.trim()) splashPath = sp.trim();
+      if (sc && sc.trim()) splashColor = sc.trim();
+      
+      // Try to copy splash to www/
+      try {
+        if (await fs.pathExists(splashPath)) {
+          await fs.copy(splashPath, 'www/splash.png');
+          console.log(chalk.green('✅ Splash screen copied to www/splash.png'));
+        } else {
+          console.log(chalk.yellow('⚠️  Splash file not found at: ' + splashPath));
+          console.log(chalk.blue('💡 Please place your splash file and run the setup again.'));
+        }
+      } catch (error) {
+        console.log(chalk.red('❌ Failed to copy splash: ' + error.message));
+      }
+    }
+
     console.log(chalk.green('✅ App customization completed!'));
   } else {
     console.log(chalk.blue('📱 Using default app settings...'));
@@ -504,14 +553,14 @@ async function customizeAppSettings() {
     version: version,
     description: description,
     icon: {
-      enabled: false,
-      path: "www/icon.png"
+      enabled: iconEnabled,
+      path: iconPath
     },
     // Use unified 'splash' object that update-config.js also supports
     splash: {
-      enabled: false,
-      path: "www/splash.png",
-      color: "#ffffff"
+      enabled: splashEnabled,
+      path: splashPath,
+      color: splashColor
     }
   };
 
