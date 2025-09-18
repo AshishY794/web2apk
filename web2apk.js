@@ -526,29 +526,28 @@ async function addCustomWebsite() {
 async function setupGitRepository() {
   console.log(chalk.blue('\n🔧 Setting up Git repository...'));
   
-  // Check if git is initialized
-    if (!await fs.pathExists('.git')) {
-    console.log(chalk.yellow('📦 Initializing Git repository...'));
-    execSync('git init', { stdio: 'pipe' });
-  }
-
-  // Get repository information
+  // Get repository information first
   const username = await askQuestion('Enter your GitHub username: ');
   const repoName = await askQuestion('Enter your repository name: ');
   
-  // Remove existing remote if any
-  try {
-    execSync('git remote remove origin', { stdio: 'pipe' });
-  } catch (e) {
-    // Remote might not exist, that's okay
+  // Create a clean Git repository (remove existing .git to avoid template history)
+  console.log(chalk.yellow('🧹 Creating clean Git repository...'));
+  if (await fs.pathExists('.git')) {
+    console.log(chalk.gray('   Removing existing Git history to create clean repository...'));
+    await fs.remove('.git');
   }
-
+  
+  // Initialize fresh Git repository
+  console.log(chalk.yellow('📦 Initializing fresh Git repository...'));
+  execSync('git init', { stdio: 'pipe' });
+  
   // Add new remote
   const remoteUrl = `https://github.com/${username}/${repoName}.git`;
   execSync(`git remote add origin ${remoteUrl}`, { stdio: 'pipe' });
   
-  console.log(chalk.green('✅ Git repository configured!'));
+  console.log(chalk.green('✅ Clean Git repository configured!'));
   console.log(chalk.blue(`📡 Remote URL: ${remoteUrl}`));
+  console.log(chalk.gray('   (No template commit history - fresh start!)'));
 }
 
 async function setupGitUserConfig() {
@@ -576,7 +575,9 @@ async function setupGitUserConfig() {
         currentName !== 'Your Name' && 
         currentEmail !== 'your.email@example.com' &&
         currentName !== 'WitbloxAshish' &&
-        currentEmail !== 'witbloxashish@example.com') {
+        currentEmail !== 'witbloxashish@example.com' &&
+        currentName !== 'AshishY794' &&
+        currentEmail !== 'auy1583@gmail.com') {
       console.log(chalk.green('✅ Git is already configured with your details:'));
       console.log(chalk.cyan(`   Name: ${currentName}`));
       console.log(chalk.cyan(`   Email: ${currentEmail}`));
@@ -649,7 +650,9 @@ async function setupGitUserConfigManual() {
         currentName !== 'Your Name' && 
         currentEmail !== 'your.email@example.com' &&
         currentName !== 'WitbloxAshish' &&
-        currentEmail !== 'witbloxashish@example.com') {
+        currentEmail !== 'witbloxashish@example.com' &&
+        currentName !== 'AshishY794' &&
+        currentEmail !== 'auy1583@gmail.com') {
       console.log(chalk.green('✅ Git is already configured with your details:'));
       console.log(chalk.cyan(`   Name: ${currentName}`));
       console.log(chalk.cyan(`   Email: ${currentEmail}`));
@@ -871,7 +874,7 @@ async function pushToGitHub(ghCommand = null) {
     // Always stage and attempt a commit so freshly written files (like apk-config.json) are included
     try {
       execSync('git add .', { stdio: 'pipe' });
-      execSync('git commit -m "chore: save config and website files"', { stdio: 'pipe' });
+      execSync('git commit -m "Initial commit: Add website and APK configuration"', { stdio: 'pipe' });
     } catch (e) {
       // Ignore if there's nothing to commit
     }
