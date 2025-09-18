@@ -74,25 +74,28 @@ async function fullyAutomatedSetup() {
   console.log('');
 
   try {
-    // Step 1: Check if we're in the right directory
+    // Step 1: Check and install npm dependencies
+    await checkAndInstallDependencies();
+
+    // Step 2: Check if we're in the right directory
     await checkProjectStructure();
 
-    // Step 2: Check GitHub CLI
+    // Step 3: Check GitHub CLI
     const ghCommand = await checkAndSetupGitHubCLI();
 
-    // Step 3: Get user's website files
+    // Step 4: Get user's website files
     await getWebsiteFiles();
 
-    // Step 4: Setup Git repository
+    // Step 5: Setup Git repository
     await setupGitRepository();
 
-    // Step 5: Customize app settings
+    // Step 6: Customize app settings
     await customizeAppSettings();
 
-    // Step 6: Push to GitHub
+    // Step 7: Push to GitHub
     await pushToGitHub(ghCommand);
 
-    // Step 7: Wait for build and download APK
+    // Step 8: Wait for build and download APK
     await waitForBuildAndDownload();
 
     // Success!
@@ -106,6 +109,30 @@ async function fullyAutomatedSetup() {
     console.log(chalk.yellow('💡 Don\'t worry! You can try again or ask for help.'));
   } finally {
     rl.close();
+  }
+}
+
+async function checkAndInstallDependencies() {
+  const spinner = ora('Checking npm dependencies...').start();
+  
+  try {
+    // Check if node_modules exists
+    if (!await fs.pathExists('node_modules')) {
+      spinner.text = 'Installing npm dependencies...';
+      console.log(chalk.yellow('\n📦 Installing npm dependencies...'));
+      console.log(chalk.blue('This may take a few minutes on first run...'));
+      
+      // Run npm install
+      execSync('npm install', { stdio: 'inherit' });
+      
+      spinner.succeed(chalk.green('✅ Dependencies installed successfully!'));
+    } else {
+      spinner.succeed(chalk.green('✅ Dependencies already installed!'));
+    }
+    
+  } catch (error) {
+    spinner.fail(chalk.red('❌ Failed to install dependencies: ' + error.message));
+    throw error;
   }
 }
 
@@ -1071,14 +1098,15 @@ function showHelp() {
   console.log('  web2apk help      - Show this help message');
   console.log('');
   console.log(chalk.blue('What web2apk does automatically:'));
-  console.log('1. ✅ Checks your project structure');
-  console.log('2. 🔧 Sets up GitHub CLI (installs if needed)');
-  console.log('3. 🔐 Authenticates with GitHub');
-  console.log('4. 📁 Helps you add your website files');
-  console.log('5. 🏠 Configures your Git repository');
-  console.log('6. 🎨 Customizes your app settings');
-  console.log('7. 🚀 Pushes everything to GitHub');
-  console.log('8. ⏳ Waits for build and downloads your APK');
+  console.log('1. 📦 Installs npm dependencies (if needed)');
+  console.log('2. ✅ Checks your project structure');
+  console.log('3. 🔧 Sets up GitHub CLI (installs if needed)');
+  console.log('4. 🔐 Authenticates with GitHub');
+  console.log('5. 📁 Helps you add your website files');
+  console.log('6. 🏠 Configures your Git repository');
+  console.log('7. 🎨 Customizes your app settings');
+  console.log('8. 🚀 Pushes everything to GitHub');
+  console.log('9. ⏳ Waits for build and downloads your APK');
   console.log('');
   console.log(chalk.yellow('📚 For more information, visit:'));
   console.log('https://github.com/AshishY794/web2apk');
