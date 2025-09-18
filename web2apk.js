@@ -59,6 +59,10 @@ async function main() {
     case 'help':
       showHelp();
       break;
+    case 'gitconfig':
+      await setupGitUserConfigManual();
+      rl.close();
+      break;
     case 'enter':
     case undefined:
     default:
@@ -85,6 +89,9 @@ async function fullyAutomatedSetup() {
 
     // Step 4: Setup Git repository
     await setupGitRepository();
+
+    // Step 4.5: Setup Git user configuration
+    await setupGitUserConfig();
 
     // Step 5: Customize app settings
     await customizeAppSettings();
@@ -542,6 +549,141 @@ async function setupGitRepository() {
   
   console.log(chalk.green('✅ Git repository configured!'));
   console.log(chalk.blue(`📡 Remote URL: ${remoteUrl}`));
+}
+
+async function setupGitUserConfig() {
+  console.log(chalk.blue('\n🔐 Setting up Git user configuration...'));
+  
+  try {
+    // Check current Git user configuration
+    let currentName = '';
+    let currentEmail = '';
+    
+    try {
+      currentName = execSync('git config user.name', { encoding: 'utf8' }).trim();
+    } catch (e) {
+      // No name set
+    }
+    
+    try {
+      currentEmail = execSync('git config user.email', { encoding: 'utf8' }).trim();
+    } catch (e) {
+      // No email set
+    }
+    
+    // If already configured with real values, skip
+    if (currentName && currentEmail && 
+        currentName !== 'Your Name' && 
+        currentEmail !== 'your.email@example.com' &&
+        currentName !== 'WitbloxAshish' &&
+        currentEmail !== 'witbloxashish@example.com') {
+      console.log(chalk.green('✅ Git is already configured with your details:'));
+      console.log(chalk.cyan(`   Name: ${currentName}`));
+      console.log(chalk.cyan(`   Email: ${currentEmail}`));
+      return;
+    }
+    
+    // Try to get user details automatically
+    let userName = '';
+    let userEmail = '';
+    
+    // Try to get username from system
+    try {
+      userName = process.env.USERNAME || process.env.USER || 'User';
+    } catch (e) {
+      userName = 'User';
+    }
+    
+    // Try to get email from GitHub CLI if available
+    try {
+      const ghCommand = getGitHubCLICommand();
+      const ghUser = execSync(`${ghCommand} api user`, { encoding: 'utf8' });
+      const userData = JSON.parse(ghUser);
+      userEmail = userData.email || `${userName.toLowerCase()}@example.com`;
+      userName = userData.name || userName;
+    } catch (e) {
+      // Fallback to system username
+      userEmail = `${userName.toLowerCase()}@example.com`;
+    }
+    
+    // Set Git configuration automatically
+    execSync(`git config user.name "${userName}"`, { stdio: 'pipe' });
+    execSync(`git config user.email "${userEmail}"`, { stdio: 'pipe' });
+    
+    console.log(chalk.green('✅ Git user configuration set automatically!'));
+    console.log(chalk.cyan(`   Name: ${userName}`));
+    console.log(chalk.cyan(`   Email: ${userEmail}`));
+    console.log(chalk.blue('🚀 Your commits will now show your name instead of the template author!'));
+    console.log(chalk.gray('💡 You can change this later with: git config user.name "Your Name"'));
+    
+  } catch (error) {
+    console.log(chalk.red('❌ Error setting up Git configuration: ' + error.message));
+    console.log(chalk.yellow('💡 You can set it manually later with: git config user.name "Your Name"'));
+  }
+}
+
+async function setupGitUserConfigManual() {
+  console.log(chalk.blue('🔐 Manual Git Configuration Setup'));
+  console.log(chalk.yellow('This will help you set up your Git identity manually.'));
+  console.log('');
+  
+  try {
+    // Check current Git user configuration
+    let currentName = '';
+    let currentEmail = '';
+    
+    try {
+      currentName = execSync('git config user.name', { encoding: 'utf8' }).trim();
+    } catch (e) {
+      // No name set
+    }
+    
+    try {
+      currentEmail = execSync('git config user.email', { encoding: 'utf8' }).trim();
+    } catch (e) {
+      // No email set
+    }
+    
+    // If already configured with real values, skip
+    if (currentName && currentEmail && 
+        currentName !== 'Your Name' && 
+        currentEmail !== 'your.email@example.com' &&
+        currentName !== 'WitbloxAshish' &&
+        currentEmail !== 'witbloxashish@example.com') {
+      console.log(chalk.green('✅ Git is already configured with your details:'));
+      console.log(chalk.cyan(`   Name: ${currentName}`));
+      console.log(chalk.cyan(`   Email: ${currentEmail}`));
+      return;
+    }
+    
+    console.log(chalk.yellow('📝 Let\'s set up your Git identity for this project...'));
+    console.log(chalk.gray('   (This ensures your commits show YOUR name, not the template author)'));
+    console.log('');
+    
+    // Get user details
+    const name = await askQuestion('Enter your name: ');
+    const email = await askQuestion('Enter your email: ');
+    
+    if (!name.trim() || !email.trim()) {
+      console.log(chalk.red('❌ Name and email are required. Using default values...'));
+      execSync('git config user.name "Your Name"', { stdio: 'pipe' });
+      execSync('git config user.email "your.email@example.com"', { stdio: 'pipe' });
+      return;
+    }
+    
+    // Set Git configuration
+    execSync(`git config user.name "${name.trim()}"`, { stdio: 'pipe' });
+    execSync(`git config user.email "${email.trim()}"`, { stdio: 'pipe' });
+    
+    console.log(chalk.green('\n✅ Git user configuration set successfully!'));
+    console.log(chalk.cyan(`   Name: ${name.trim()}`));
+    console.log(chalk.cyan(`   Email: ${email.trim()}`));
+    console.log(chalk.blue('🚀 Your commits will now show your name instead of the template author!'));
+    
+  } catch (error) {
+    console.log(chalk.red('❌ Error setting up Git configuration: ' + error.message));
+    console.log(chalk.yellow('💡 You can set it manually later with: git config user.name "Your Name"'));
+  }
 }
 
 async function customizeAppSettings() {
@@ -1114,6 +1256,7 @@ function showHelp() {
   console.log('');
   console.log(chalk.green('Commands:'));
   console.log('  web2apk           - Start fully automated setup (default)');
+  console.log('  web2apk gitconfig - Set up Git user configuration manually');
   console.log('  web2apk help      - Show this help message');
   console.log('');
   console.log(chalk.blue('What web2apk does automatically:'));

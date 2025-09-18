@@ -12,7 +12,8 @@
     "open": "npx cap open android",
     "github-setup": "node scripts/github-setup.js",
     "update-config": "node scripts/update-config.js",
-    "web2apk": "node web2apk.js"
+    "web2apk": "node web2apk.js",
+    "setup-git": "node setup-git-config.js"
   },
   "bin": {
     "web2apk": "./web2apk.js"

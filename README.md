@@ -52,6 +52,7 @@
 
 | Section | Description |
 |---------|-------------|
+| [🎯 Template Repository Setup](#-template-repository-setup) | Clean template setup instructions |
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
 | [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
@@ -69,6 +70,23 @@
 | [🤝 Contributing](#-contributing) | Help improve this project |
 
 ---
+
+## 🎯 Template Repository Setup
+
+**This is a clean template repository!** When you clone this repository, you'll get:
+
+✅ **Clean starting point** - No personal data or commit history  
+✅ **Generic configuration** - Ready for your customization  
+✅ **Automatic Git setup** - Scripts to configure your identity  
+✅ **Professional structure** - All files organized and ready to use  
+
+**First time setup:**
+1. Clone this repository
+2. Run `npm run web2apk` - it will automatically detect and set your Git identity
+3. Add your website files to the `www/` folder
+4. Push to GitHub and get your APK!
+
+**Why this matters:** Your commits will show YOUR name, not the template author's name!
 
 ## 🌟 What Can Be Converted to APK?
 
@@ -218,6 +236,24 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 
 **What this does:** Connects your project to your own GitHub account instead of the original one.
 
+#### **Step 4.5: Set Up Your Git Identity** 🔐
+Before pushing to GitHub, you need to set your own Git identity so your commits show your name:
+
+**Option 1: Automatic Setup (Recommended)** 🤖
+```bash
+# Run the automatic Git setup script (detects your identity automatically)
+npm run web2apk gitconfig
+```
+
+**Option 2: Manual Setup** ✋
+```bash
+# Set your name and email (replace with your actual details)
+git config user.name "Your Name"
+git config user.email "your.email@example.com"
+```
+
+**What this does:** Ensures your commits show YOUR name, not the template author's name!
+
 #### **Step 5: Customize Your App** 🎨
 Edit the `apk-config.json` file to make your app special:
 
@@ -256,6 +292,12 @@ Edit the `apk-config.json` file to make your app special:
 - **Both files** → Capacitor automatically processes them into native Android resources
 
 #### **Step 6: Send It to GitHub** 🚀
+
+**✅ Git Identity Already Set Up!** 🔐
+
+You already set up your Git identity in Step 4.5, so your commits will show YOUR name, not the template author's name!
+
+**Push your changes:**
 ```bash
 # Add all your files
 git add .
@@ -267,7 +309,10 @@ git commit -m "Add my awesome website project"
 git push origin main
 ```
 
-**What this does:** Saves your website to GitHub and starts building your app automatically!
+**What this does:** 
+- Saves your website to GitHub and starts building your app automatically!
+- Your commits will show your name instead of the template author
+- GitHub Actions will start building your APK
 
 #### **Step 7: Get Your App!** 📱
 ```bash
