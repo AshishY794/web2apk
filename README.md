@@ -109,13 +109,13 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 ```bash
 # Step 1: Download the magic box
 git clone https://github.com/AshishY794/web2apk.git
-cd web2appA
+cd web2apk
 
 # Step 2: Install dependencies (IMPORTANT!)
 npm install
 
 # Step 3: Run the automated setup
-npm run web2app
+npm run web2apk
 ```
 
 
@@ -127,7 +127,7 @@ If you want to understand every step and do it manually, follow this guide:
 ```bash
 # This downloads the magic box to your computer
 git clone https://github.com/AshishY794/web2apk.git
-cd web2appA
+cd web2apk
 ```
 
 **What this does:** Downloads all the tools you need to turn websites into apps!
@@ -237,22 +237,22 @@ npm run web2apk getapp
 
 ## 🛠️ The Magic Commands
 
-### **The `web2app` Command - The Ultimate Magic!** ✨
+### **The `web2apk` Command - The Ultimate Magic!** ✨
 
 This is the **NEW** super easy command that does everything for you:
 
 ```bash
 # Windows Users (PowerShell/Command Prompt)
-.\web2app.bat          # Start fully automated setup
-.\web2app.bat help     # Get help
+.\web2apk.bat          # Start fully automated setup
+.\web2apk.bat help     # Get help
 
 # Mac/Linux Users
-./web2app.sh           # Start fully automated setup
-./web2app.sh help      # Get help
+./web2apk.sh           # Start fully automated setup
+./web2apk.sh help      # Get help
 
 # Everyone can also use:
-npm run web2app        # Start fully automated setup
-npm run web2app help   # Get help
+npm run web2apk        # Start fully automated setup
+npm run web2apk help   # Get help
 ```
 
 ### **The `web2apk` Command - For Advanced Users!** 🔧
@@ -281,9 +281,9 @@ npm run web2apk help   # Get help
 
 ### **What Each Command Does:**
 
-#### **`web2app` - The Ultimate Magic Command** ✨
+#### **`web2apk` - The Ultimate Magic Command** ✨
 ```bash
-web2app
+web2apk
 ```
 
 **This is what you'll see:**
@@ -616,11 +616,11 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 git push origin main
 ```
 
-### **Problem 9: "web2app command not found"** ❌
+### **Problem 9: "web2apk command not found"** ❌
 
 **What you see:**
 ```
-web2app : The term 'web2app' is not recognized as the name of a cmdlet, function, script file, or operable program.
+web2apk : The term 'web2apk' is not recognized as the name of a cmdlet, function, script file, or operable program.
 ```
 
 **Solution:** Use the correct syntax for your system! 💻
@@ -628,13 +628,13 @@ web2app : The term 'web2app' is not recognized as the name of a cmdlet, function
 **Fix:**
 ```bash
 # Windows PowerShell/Command Prompt (use .\ before the command)
-.\web2app.bat
+.\web2apk.bat
 
 # Mac/Linux (use ./ before the command)
-./web2app.sh
+./web2apk.sh
 
 # Or everyone can use npm (no .\ or ./ needed)
-npm run web2app
+npm run web2apk
 ```
 
 **Why this happens:** Windows PowerShell doesn't run scripts from the current directory by default for security reasons.
@@ -643,7 +643,7 @@ npm run web2app
 
 **What you see:**
 ```
-The term 'web2app' is not recognized in VS Code terminal
+The term 'web2apk' is not recognized in VS Code terminal
 ```
 
 **Solution:** Use the correct command for VS Code terminal! 💻
@@ -651,19 +651,19 @@ The term 'web2app' is not recognized in VS Code terminal
 **Fix:**
 ```bash
 # In VS Code terminal, use:
-npm run web2app        # This always works in VS Code
+npm run web2apk        # This always works in VS Code
 
 # Or if you want to use the batch/shell files:
 # Windows:
-.\web2app.bat
+.\web2apk.bat
 
 # Mac/Linux:
-./web2app.sh
+./web2apk.sh
 ```
 
 **VS Code Terminal Tips:**
 - VS Code terminal works the same as regular terminal
-- Use `npm run web2app` for the most reliable experience
+- Use `npm run web2apk` for the most reliable experience
 - You can copy commands from the README and paste them
 - VS Code will show you the current directory in the terminal prompt
 
@@ -681,21 +681,21 @@ Error: Cannot find module 'fs-extra'
 **Fix:**
 ```bash
 # Make sure you're in the project directory
-cd web2appA
+cd web2apk
 
 # Install all dependencies
 npm install
 
 # Then run the command
-npm run web2app
+npm run web2apk
 ```
 
 **Complete setup sequence:**
 ```bash
 git clone https://github.com/AshishY794/web2apk.git
-cd web2appA
+cd web2apk
 npm install          # ← This step is IMPORTANT!
-npm run web2app
+npm run web2apk
 ```
 
 ### **Problem 12: "Repository not found"** ❌
@@ -722,7 +722,7 @@ fatal: repository 'https://github.com/username/reponame.git/' not found
    - Don't initialize with README (we already have files)
 3. **Try the command again:**
    ```bash
-   npm run web2app
+   npm run web2apk
    ```
 
 **Manual fix:**

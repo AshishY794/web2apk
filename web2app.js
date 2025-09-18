@@ -115,7 +115,7 @@ async function checkProjectStructure() {
   try {
     // Check if we're in the right directory
     if (!await fs.pathExists('package.json')) {
-      throw new Error('Please run this command from the web2appA directory');
+      throw new Error('Please run this command from the web2apk directory');
     }
 
     // Check if www directory exists
@@ -1081,7 +1081,7 @@ function showHelp() {
   console.log('8. ⏳ Waits for build and downloads your APK');
   console.log('');
   console.log(chalk.yellow('📚 For more information, visit:'));
-  console.log('https://github.com/AshishY794/web2appA');
+  console.log('https://github.com/AshishY794/web2apk');
 }
 
 // Run the main function

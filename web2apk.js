@@ -363,7 +363,7 @@ function showHelp() {
   console.log('  web2apk config     # View current app settings');
   console.log('');
   console.log(chalk.yellow('📚 For more information, visit:'));
-  console.log('https://github.com/AshishY794/web2appA');
+  console.log('https://github.com/AshishY794/web2apk');
 }
 
 // Run the main function
