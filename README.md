@@ -151,11 +151,11 @@ npm install
 npm run web2apk
 ```
 
+**🚨 If GitHub login gets stuck:** If the `npm run web2apk` command gets stuck during GitHub authentication, see the [**Problems and Solutions**](#-problems-and-solutions-dont-worry) section below for quick fixes!
+
 **💡 Pro Tip:** You can also open the project folder directly in VS Code by:
 - File → Open Folder → Select the `web2apk` folder
 - Or drag and drop the `web2apk` folder into VS Code
-
-**🚨 If GitHub login gets stuck:** If the `npm run web2apk` command gets stuck during GitHub authentication, see the "Problems and Solutions" section below for quick fixes!
 
 
 ### 🎮 Adventure 2: Manual Step-by-Step (Learn Everything!)
@@ -190,9 +190,7 @@ gh auth login
 
 **What this does:** Makes sure you can use GitHub (like your account for storing code).
 
-**If you get an error or it gets stuck:** Don't worry! See the "Problems and Solutions" section below! 😊
-
-**🚨 Quick fix if `gh auth login` gets stuck:** Try `gh auth login --web` instead, or see "Problem 2.1" in the troubleshooting section!
+**If you get an error:** Don't worry! See the "Problems and Solutions" section below! 😊
 
 #### **Step 4: Add Your Website** 🌐
 Put your website project files in the `www` folder inside your `web2apk` project:
@@ -455,6 +453,33 @@ gh auth login
 # 7. Come back to the original terminal and press Enter
 ```
 
+**🚀 Quick Manual Setup (Alternative):**
+If the above doesn't work, try this step-by-step approach:
+
+```bash
+# Step 1: Open a new terminal window
+# Step 2: Navigate to your project
+cd web2apk
+
+# Step 3: Run GitHub CLI login
+gh auth login
+
+# Step 4: Follow these exact choices:
+# - Where do you use GitHub? → GitHub.com
+# - What is your preferred protocol? → HTTPS
+# - How would you like to authenticate? → Login with a web browser
+# - Copy the code that appears
+# - Press Enter to open browser
+# - Complete login in browser
+# - Return to terminal and press Enter
+
+# Step 5: Verify login worked
+gh auth status
+
+# Step 6: Try the main command again
+npm run web2apk
+```
+
 **Method 2: Use Token Authentication**
 ```bash
 # If browser login keeps failing, use token:
@@ -464,17 +489,7 @@ gh auth login --with-token
 # (Create one at: https://github.com/settings/tokens)
 ```
 
-**Method 3: Use Alternative Authentication (Quick Fix)**
-```bash
-# If the interactive login gets stuck, try this:
-gh auth login --web
-
-# This opens GitHub in your browser directly
-# Complete the login in your browser
-# Then come back to terminal
-```
-
-**Method 4: Restart and Try Again**
+**Method 3: Restart and Try Again**
 ```bash
 # Close all terminals
 # Open a new terminal
@@ -483,15 +498,6 @@ cd C:\Users\YourName\Desktop\MyProjects\web2apk
 
 # Try the setup again
 npm run web2apk
-```
-
-**Method 5: Force Logout and Login Fresh**
-```bash
-# If nothing else works, start completely fresh:
-gh auth logout
-gh auth login --web
-
-# This clears any stuck sessions and starts fresh
 ```
 
 ### **Problem 3: "gh command not found"** ❌
