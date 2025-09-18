@@ -1,14 +1,14 @@
 {
-  "appName": "MyTestApk",
-  "appId": "com.apktest.app",
-  "version": "5.5.5",
-  "description": "Test thennew apk",
+  "appName": "Tersytad",
+  "appId": "com.daysgfas.app",
+  "version": "4.4.4",
+  "description": "teasgf",
   "icon": {
     "enabled": false,
     "path": "www/icon.png"
   },
   "splash": {
-    "enabled": true,
+    "enabled": false,
     "path": "www/splash.png",
     "color": "#ffffff"
   }
