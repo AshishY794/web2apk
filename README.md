@@ -208,6 +208,7 @@ Edit the `apk-config.json` file to make your app special:
 1. Create a 192x192 pixel PNG image
 2. Name it `icon.png`
 3. Put it in the `www/` folder
+4. **Capacitor will automatically use this for your Android app icon**
 
 #### **Step 6: Send It to GitHub** 🚀
 ```bash
@@ -961,8 +962,13 @@ This usually takes 5-15 minutes. We'll check every 10 seconds.
 2. **Put it in the right place:**
    ```
    www/
-   └── icon.png  ← Your custom icon
+   └── icon.png  ← Your custom icon (for Capacitor)
    ```
+
+3. **Capacitor automatically:**
+   - Generates multiple icon sizes for different screen densities
+   - Creates native Android app icon resources
+   - Uses your icon in the final APK
 
 3. **Update your config:**
    ```json
@@ -984,8 +990,13 @@ This usually takes 5-15 minutes. We'll check every 10 seconds.
 2. **Put it in the right place:**
    ```
    www/
-   └── splash.png  ← Your splash screen
+   └── splash.png  ← Your splash screen (for Capacitor)
    ```
+
+3. **Capacitor automatically:**
+   - Creates native Android splash screen resources
+   - Generates splash screens for different orientations
+   - Shows your splash screen when the app starts
 
 3. **Update your config:**
    ```json
@@ -1070,8 +1081,8 @@ Your Project/
 │   ├── index.html         ← Main page
 │   ├── style.css          ← Styles
 │   ├── script.js          ← JavaScript
-│   ├── icon.png           ← App icon
-│   └── splash.png         ← Splash screen
+│   ├── icon.png           ← App icon (for Capacitor)
+│   └── splash.png         ← Splash screen (for Capacitor)
 ├── .github/
 │   └── workflows/         ← The magic recipes
 │       ├── build-apk.yml  ← Builds debug APK
@@ -1105,6 +1116,12 @@ Capacitor is like a bridge between your website and mobile apps. It takes your H
 - Your website = A book
 - Capacitor = A magic book cover
 - The result = A book that works like an app!
+
+**How Capacitor Uses Your Files:**
+- **`icon.png`** → Creates native Android app icons
+- **`splash.png`** → Creates native Android splash screens
+- **`index.html`** → Becomes your app's main screen
+- **CSS/JS files** → Work exactly like in a browser
 
 ### **What is GitHub Actions?** 🤖
 
