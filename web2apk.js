@@ -261,12 +261,43 @@ async function installGitHubCLI() {
 async function authenticateGitHub(ghCommand) {
   console.log(chalk.blue('🔐 Starting GitHub authentication...'));
   console.log(chalk.yellow('This will open a browser window for you to log in.'));
+  console.log(chalk.cyan('💡 If the browser doesn\'t open automatically, you can:'));
+  console.log(chalk.white('   1. Copy the URL that appears below'));
+  console.log(chalk.white('   2. Paste it in your browser'));
+  console.log(chalk.white('   3. Complete the login process'));
+  console.log(chalk.white('   4. Come back here and press Enter'));
+  console.log('');
   
   try {
-    execSync(`${ghCommand} auth login`, { stdio: 'inherit' });
-    console.log(chalk.green('✅ GitHub authentication successful!'));
+    // Use interactive mode with better error handling
+    const { spawn } = require('child_process');
+    
+    return new Promise((resolve, reject) => {
+      const authProcess = spawn(ghCommand.replace(/"/g, ''), ['auth', 'login'], {
+        stdio: 'inherit',
+        shell: true
+      });
+      
+      authProcess.on('close', (code) => {
+        if (code === 0) {
+          console.log(chalk.green('✅ GitHub authentication successful!'));
+          resolve();
+        } else {
+          console.log(chalk.red('❌ GitHub authentication failed. Please try again.'));
+          reject(new Error('GitHub authentication failed'));
+        }
+      });
+      
+      authProcess.on('error', (error) => {
+        console.log(chalk.red('❌ GitHub authentication error: ' + error.message));
+        reject(error);
+      });
+    });
+    
   } catch (error) {
     console.log(chalk.red('❌ GitHub authentication failed. Please try again.'));
+    console.log(chalk.yellow('💡 You can also run this command manually:'));
+    console.log(chalk.white(`   ${ghCommand} auth login`));
     throw error;
   }
 }
@@ -844,8 +875,23 @@ async function ensureGitHubRepoScopes(ghCommand) {
         // Prefer refresh when available
         execSync(`${ghCommand} auth refresh -s repo -s workflow`, { stdio: 'pipe' });
       } catch (e) {
-        // Fall back to a login requesting scopes
-        execSync(`${ghCommand} auth login -s repo -s workflow`, { stdio: 'inherit' });
+        // Fall back to a login requesting scopes with better handling
+        console.log(chalk.yellow('🔄 Refreshing GitHub authentication with required scopes...'));
+        try {
+          const { spawn } = require('child_process');
+          const refreshProcess = spawn(ghCommand.replace(/"/g, ''), ['auth', 'login', '-s', 'repo', '-s', 'workflow'], {
+            stdio: 'inherit',
+            shell: true
+          });
+          
+          refreshProcess.on('close', (code) => {
+            if (code !== 0) {
+              console.log(chalk.red('❌ Failed to refresh GitHub authentication.'));
+            }
+          });
+        } catch (spawnError) {
+          console.log(chalk.red('❌ Failed to refresh GitHub authentication.'));
+        }
       }
       console.log(chalk.green('✅ GitHub token scopes updated.'));
     }

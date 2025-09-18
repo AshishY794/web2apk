@@ -370,6 +370,53 @@ gh auth login
 # 6. Complete login in your browser
 ```
 
+### **Problem 2.1: "GitHub CLI authentication gets stuck"** ❌
+
+**What you see:**
+```
+🔐 Starting GitHub authentication...
+This will open a browser window for you to log in.
+# Then it gets stuck and doesn't respond to input
+```
+
+**Solution:** This is a common issue! Here's how to fix it:
+
+**Method 1: Manual Authentication (Recommended)**
+```bash
+# Open a new terminal/command prompt
+# Run this command manually:
+gh auth login
+
+# Follow the prompts:
+# 1. Choose "GitHub.com"
+# 2. Choose "HTTPS" 
+# 3. Choose "Yes" for Git operations
+# 4. Choose "Login with a web browser"
+# 5. Copy the code and press Enter
+# 6. Complete login in your browser
+# 7. Come back to the original terminal and press Enter
+```
+
+**Method 2: Use Token Authentication**
+```bash
+# If browser login keeps failing, use token:
+gh auth login --with-token
+
+# Then paste your GitHub personal access token
+# (Create one at: https://github.com/settings/tokens)
+```
+
+**Method 3: Restart and Try Again**
+```bash
+# Close all terminals
+# Open a new terminal
+# Navigate back to your project
+cd C:\Users\YourName\Desktop\MyProjects\web2apk
+
+# Try the setup again
+npm run web2apk
+```
+
 ### **Problem 3: "gh command not found"** ❌
 
 **What you see:**
