@@ -489,7 +489,7 @@ async function setupGitRepository() {
   console.log(chalk.blue('\n🔧 Setting up Git repository...'));
   
   // Check if git is initialized
-  if (!await fs.pathExists('.git')) {
+    if (!await fs.pathExists('.git')) {
     console.log(chalk.yellow('📦 Initializing Git repository...'));
     execSync('git init', { stdio: 'pipe' });
   }
@@ -910,7 +910,7 @@ async function waitForBuildAndDownload() {
       console.log(chalk.blue('🔄 Build in progress, waiting for completion...'));
       await waitForBuildCompletion(owner, repoName, workflowStatus.runId, ghCommand);
     }
-    
+
   } catch (error) {
     console.log(chalk.yellow('⚠️  Could not automatically download APK: ' + error.message));
     console.log(chalk.blue('💡 You can manually download it from GitHub Actions when ready.'));
@@ -1031,12 +1031,12 @@ async function downloadAPK(owner, repo, runId, ghCommand) {
     let apkFile = null;
     
     // Look for APK files in subdirectories
-    for (const file of files) {
+      for (const file of files) {
       const filePath = path.join(downloadPath, file);
-      const stat = await fs.stat(filePath);
+        const stat = await fs.stat(filePath);
       
-      if (stat.isDirectory()) {
-        const subFiles = await fs.readdir(filePath);
+        if (stat.isDirectory()) {
+          const subFiles = await fs.readdir(filePath);
         for (const subFile of subFiles) {
           if (subFile.endsWith('.apk')) {
             apkFile = path.join(filePath, subFile);
