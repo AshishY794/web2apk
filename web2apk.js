@@ -12,8 +12,8 @@ async function main() {
   const command = args[0];
 
   switch (command) {
-    case 'getapp':
-      await getApp();
+    case 'getapk':
+      await getAPK();
       break;
     case 'config':
       await showConfig();
@@ -28,7 +28,7 @@ async function main() {
   }
 }
 
-async function getApp() {
+async function getAPK() {
   const spinner = ora('Checking GitHub Actions status...').start();
   
   try {
@@ -342,7 +342,7 @@ async function setup() {
     console.log('1. Edit apk-config.json to customize your app');
     console.log('2. Add your website files to the www/ folder');
     console.log('3. Commit and push your changes');
-    console.log('4. Run "web2apk getapp" to download your APK');
+    console.log('4. Run "web2apk getapk" to download your APK');
     
   } catch (error) {
     console.log(chalk.red('❌ Setup failed: ' + error.message));
@@ -353,13 +353,13 @@ function showHelp() {
   console.log(chalk.blue('🚀 Web2APK - Convert Websites to Android APKs'));
   console.log('');
   console.log(chalk.green('Commands:'));
-  console.log('  web2apk getapp     - Check build status and download APK');
+  console.log('  web2apk getapk     - Check build status and download APK');
   console.log('  web2apk config     - Show current APK configuration');
   console.log('  web2apk setup      - Run initial setup');
   console.log('  web2apk help       - Show this help message');
   console.log('');
   console.log(chalk.blue('Examples:'));
-  console.log('  web2apk getapp     # Check status and download latest APK');
+  console.log('  web2apk getapk     # Check status and download latest APK');
   console.log('  web2apk config     # View current app settings');
   console.log('');
   console.log(chalk.yellow('📚 For more information, visit:'));

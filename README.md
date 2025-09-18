@@ -1,27 +1,42 @@
-# 🚀 Web2App Converter - Complete Guide for Everyone!
+# 🚀 Web2APK - Complete Guide for Everyone!
 
 [![Build APK](https://github.com/AshishY794/web2apk/actions/workflows/build-apk.yml/badge.svg)](https://github.com/AshishY794/web2apk/actions/workflows/build-apk.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **🎉 Turn ANY web project into an Android app in just 5 minutes! No coding experience needed!**
 
-## 🌟 What is this?
+> **Keywords:** Web2APK, Web to APK, HTML to APK, Website to Android App, Web App to APK, Convert Website to App, HTML CSS JavaScript to APK, Capacitor APK Builder, GitHub Actions APK, Free APK Builder, No Code APK, Web App Converter, Android App Generator, PWA to APK, React to APK, Vue to APK, Angular to APK, Static Site to APK, Web Development, Mobile App Development, APK Builder Tool, Web2APK Converter, Online APK Builder, Free Android App Maker
 
-This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, React, Vue, Angular, etc.) and turns it into an Android app (APK file) that you can install on any Android phone or tablet!
+## 🌟 What is Web2APK?
+
+**Web2APK** is the ultimate **web to APK converter** that takes ANY web project (HTML, CSS, JavaScript, React, Vue, Angular, etc.) and turns it into an Android app (APK file) that you can install on any Android phone or tablet!
+
+**Perfect for:**
+- Converting HTML websites to Android apps
+- Building React apps to APK
+- Creating Vue.js mobile apps
+- Converting Angular projects to APK
+- Making PWA (Progressive Web Apps) into native Android apps
+- Building static websites into mobile apps
+- Converting any web project to APK without coding
 
 **Think of it like this:**
 - 📱 You have a website (like a digital book)
 - 🪄 We use magic (GitHub Actions) to turn it into an app
 - 📲 You can install it on your phone like any other app!
 
-## ✨ Amazing Features
+## ✨ Amazing Web2APK Features
 
-- 🚀 **Super Easy**: Just push your code and get an APK!
-- ☁️ **No Setup**: Everything happens in the cloud - no Android Studio needed!
-- 🤖 **Automatic**: Every time you update your website, you get a new app!
-- 📱 **Real App**: Works like any other app on your phone
-- 🎨 **Beautiful**: Includes a stunning example to get you started
-- 🔄 **Live Updates**: See your build progress in real-time!
+- 🚀 **Super Easy Web to APK Conversion**: Just push your code and get an APK!
+- ☁️ **No Setup Required**: Everything happens in the cloud - no Android Studio needed!
+- 🤖 **Automatic APK Building**: Every time you update your website, you get a new app!
+- 📱 **Real Native Android App**: Works like any other app on your phone
+- 🎨 **Beautiful Examples**: Includes stunning examples to get you started
+- 🔄 **Live Build Updates**: See your APK build progress in real-time!
+- 💰 **100% Free**: No cost, no limits, no hidden fees
+- 🌐 **All Web Technologies**: Supports HTML, CSS, JavaScript, React, Vue, Angular, and more
+- 📦 **One-Click APK Download**: Get your APK file instantly when build completes
+- 🔧 **No Coding Required**: Perfect for beginners and professionals alike
 
 ## 🎯 Who Can Use This?
 
@@ -39,7 +54,6 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
 | [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
-| [🛠️ The Magic Commands](#️-the-magic-commands) | All available commands |
 | [🚨 Problems and Solutions](#-problems-and-solutions-dont-worry) | Fix common issues |
 | [📋 What Happens After You Enter Your Settings](#-what-happens-after-you-enter-your-settings) | Detailed process explanation |
 | [🎨 Making Your App Look Amazing](#-making-your-app-look-amazing) | Icons, splash screens, and more |
@@ -102,9 +116,9 @@ This is like a magic box that takes ANY web project (HTML, CSS, JavaScript, Reac
 
 #### **For VS Code Users:**
 
-1. **Open VS Code**
+1. **Open your project in VS Code**
 2. **Open Terminal** (Ctrl+` or Terminal → New Terminal)
-3. **Run these commands one by one:**
+3. **Run the following commands one by one:**
 
 ```bash
 # Step 1: Download the magic box
@@ -117,6 +131,10 @@ npm install
 # Step 3: Run the automated setup
 npm run web2apk
 ```
+
+**💡 Pro Tip:** You can also open the project folder directly in VS Code by:
+- File → Open Folder → Select the `web2apk` folder
+- Or drag and drop the `web2apk` folder into VS Code
 
 
 ### 🎮 Adventure 2: Manual Step-by-Step (Learn Everything!)
@@ -146,12 +164,25 @@ gh auth login
 **If you get an error:** Don't worry! See the "Problems and Solutions" section below! 😊
 
 #### **Step 3: Add Your Website** 🌐
-Put your website files in the `www` folder:
+Put your website project files in the `www` folder inside your `web2apk` project:
 
 ```bash
 # Copy your website files to the www folder
 # Replace "/path/to/your/website" with where your website files are
 cp -r /path/to/your/website/* www/
+```
+
+**📁 Project Structure:**
+```
+web2apk/                    ← Your main project folder
+├── www/                    ← Put your website files here
+│   ├── index.html         ← Your main page
+│   ├── style.css          ← Your styles
+│   ├── script.js          ← Your JavaScript
+│   └── other files...     ← Any other website files
+├── package.json
+├── README.md
+└── other project files...
 ```
 
 **What files you need:**
@@ -212,6 +243,17 @@ Edit the `apk-config.json` file to make your app special:
 3. Put it in the `www/` folder
 4. **Capacitor will automatically use this for your Android app icon**
 
+**To add a custom splash screen:**
+1. Create a 1080x1920 pixel PNG image (or similar portrait size)
+2. Name it `splash.png`
+3. Put it in the `www/` folder
+4. **Capacitor will automatically use this as your app's loading screen**
+
+**What these files do:**
+- **`icon.png`** → Creates the app icon that appears on Android home screen
+- **`splash.png`** → Creates the loading screen shown when your app starts
+- **Both files** → Capacitor automatically processes them into native Android resources
+
 #### **Step 6: Send It to GitHub** 🚀
 ```bash
 # Add all your files
@@ -229,7 +271,7 @@ git push origin main
 #### **Step 7: Get Your App!** 📱
 ```bash
 # Check if your app is ready and download it
-npm run web2apk getapp
+npm run web2apk getapk
 ```
 
 **What this does:** 
@@ -238,154 +280,6 @@ npm run web2apk getapp
 - 📥 Downloads your APK when it's ready
 - 🎉 Shows success message!
 
-## 🛠️ The Magic Commands
-
-### **The `web2apk` Command - The Ultimate Magic!** ✨
-
-This is the **NEW** super easy command that does everything for you:
-
-```bash
-# Windows Users (PowerShell/Command Prompt)
-.\web2apk.bat          # Start fully automated setup
-.\web2apk.bat help     # Get help
-
-# Mac/Linux Users
-./web2apk.sh           # Start fully automated setup
-./web2apk.sh help      # Get help
-
-# Everyone can also use:
-npm run web2apk        # Start fully automated setup
-npm run web2apk help   # Get help
-```
-
-### **The `web2apk` Command - For Advanced Users!** 🔧
-
-This command is for when you want to manage your app after it's built:
-
-```bash
-# Windows Users (PowerShell/Command Prompt)
-.\web2apk.bat getapp   # Get your app when it's ready
-.\web2apk.bat config   # See your app settings
-.\web2apk.bat setup    # Set everything up
-.\web2apk.bat help     # Get help
-
-# Mac/Linux Users
-./web2apk.sh getapp    # Get your app when it's ready
-./web2apk.sh config    # See your app settings
-./web2apk.sh setup     # Set everything up
-./web2apk.sh help      # Get help
-
-# Everyone can also use:
-npm run web2apk getapp # Get your app when it's ready
-npm run web2apk config # See your app settings
-npm run web2apk setup  # Set everything up
-npm run web2apk help   # Get help
-```
-
-### **What Each Command Does:**
-
-#### **`web2apk` - The Ultimate Magic Command** ✨
-```bash
-web2apk
-```
-
-**This is what you'll see:**
-```
-🚀 Welcome to Web2App - Fully Automated Setup!
-🎯 This will guide you through everything step by step!
-
-✅ Project structure is ready!
-✅ GitHub CLI is ready!
-📁 Let's add your website files!
-🔧 Setting up Git repository...
-🎨 Let's customize your app!
-🚀 Pushing to GitHub...
-⏳ Waiting for your APK to be built...
-✅ Build completed successfully!
-📥 Downloading APK...
-✅ APK downloaded successfully!
-
-🎉🎉🎉 SUCCESS! 🎉🎉🎉
-Your website has been converted to an Android app!
-📱 Check the downloads/ folder for your APK file!
-📲 You can now install it on any Android device!
-```
-
-**What it does automatically:**
-1. ✅ **Checks everything** - Makes sure you're ready
-2. 🔧 **Installs GitHub CLI** - If you don't have it
-3. 🔐 **Logs you in** - To GitHub automatically
-4. 📁 **Gets your website** - Helps you add your files
-5. 🏠 **Sets up Git** - Configures your repository
-6. 🎨 **Customizes app** - Asks for your app details
-7. 🚀 **Pushes to GitHub** - Starts the build process
-8. ⏳ **Waits and downloads** - Gets your APK when ready
-9. 🎉 **Success!** - You have your Android app!
-
-#### **`getapp` - The Main Command** 🎯
-```bash
-npm run web2apk getapp
-```
-
-**This is what you'll see:**
-```
-⏳ Build is currently in progress...
-📊 Progress: 31%
-🔗 View progress: https://github.com/AshishY794/web2apk/actions
-
-🔄 Waiting for build to complete...
-⏱️  Checking every 30 seconds for updates...
-
-📊 Progress: 45% (Check 2/60)
-📊 Progress: 67% (Check 3/60)
-📊 Progress: 89% (Check 4/60)
-
-✅ Build completed successfully!
-📥 Downloading APK...
-✅ APK downloaded successfully!
-📱 APK saved to: downloads/app-2025-01-16T17-49-30-123Z.apk
-📊 File size: 3.6 MB
-
-🎉 APK ready! Build and download completed successfully!
-📱 You can now install the APK on your Android device.
-```
-
-#### **`config` - See Your Settings** ⚙️
-```bash
-npm run web2apk config
-```
-
-**Shows you:**
-```
-🔧 Current APK Configuration:
-
-📱 App Name: My Awesome App
-🆔 App ID: com.mycompany.myapp
-📦 Version: 1.0.0
-📝 Description: My converted web app
-🎨 Custom Icon: ✅ Enabled
-🖼️  Custom Splash: ✅ Enabled
-```
-
-#### **`setup` - Set Everything Up** 🔧
-```bash
-npm run web2apk setup
-```
-
-**This helps you:**
-- Set up your project
-- Configure everything
-- Get ready to build
-
-#### **`help` - Get Help** ❓
-```bash
-npm run web2apk help
-```
-
-**Shows you:**
-- All available commands
-- How to use them
-- Examples
 
 ## 🚨 Problems and Solutions (Don't Worry!)
 
@@ -492,7 +386,7 @@ gh : The term 'gh' is not recognized as the name of a cmdlet, function, script f
 2. **Open a new terminal/command prompt**
 3. **Navigate back to your project:**
    ```bash
-   cd C:\Users\HP\Desktop\MyEarningWebsites\Web2Appc
+   cd C:\Users\YourName\Desktop\MyProjects\web2apk
    ```
 4. **Test GitHub CLI:**
    ```bash
@@ -549,7 +443,7 @@ gh : The term 'gh' is not recognized as the name of a cmdlet, function, script f
 1. **Wait 2-3 minutes**
 2. **Try again:**
    ```bash
-   npm run web2apk getapp
+   npm run web2apk getapk
    ```
 3. **Or check manually:**
    - Go to your GitHub repository
@@ -630,14 +524,14 @@ web2apk : The term 'web2apk' is not recognized as the name of a cmdlet, function
 
 **Fix:**
 ```bash
+# Everyone can use npm (works on all platforms)
+npm run web2apk
+
 # Windows PowerShell/Command Prompt (use .\ before the command)
 .\web2apk.bat
 
 # Mac/Linux (use ./ before the command)
 ./web2apk.sh
-
-# Or everyone can use npm (no .\ or ./ needed)
-npm run web2apk
 ```
 
 **Why this happens:** Windows PowerShell doesn't run scripts from the current directory by default for security reasons.
@@ -1028,7 +922,7 @@ Edit `apk-config.json`:
 
 **Method 1: Using the command (easiest)**
 ```bash
-npm run web2apk getapp
+npm run web2apk getapk
 ```
 
 **Method 2: Manual download**
@@ -1300,3 +1194,53 @@ You've reached the end of this guide! You now know everything you need to turn w
 *From kids to professionals, from students to businesses - everyone can turn their websites into apps!* 🌟
 
 **Happy Building!** 🚀📱✨
+
+---
+
+## 🔍 SEO Keywords & Search Terms
+
+**Primary Keywords:**
+- Web2APK
+- Web to APK
+- HTML to APK
+- Website to Android App
+- Web App to APK
+- Convert Website to App
+
+**Secondary Keywords:**
+- HTML CSS JavaScript to APK
+- Capacitor APK Builder
+- GitHub Actions APK
+- Free APK Builder
+- No Code APK
+- Web App Converter
+- Android App Generator
+- PWA to APK
+- React to APK
+- Vue to APK
+- Angular to APK
+- Static Site to APK
+
+**Long-tail Keywords:**
+- How to convert website to Android app
+- Free web to APK converter
+- Build Android app from HTML
+- Convert React app to APK
+- Make mobile app from website
+- Web development to mobile app
+- No coding Android app builder
+- Free APK generator online
+- Convert PWA to native app
+- Build APK from web project
+
+**Related Terms:**
+- Web Development
+- Mobile App Development
+- APK Builder Tool
+- Web2APK Converter
+- Online APK Builder
+- Free Android App Maker
+- Capacitor Framework
+- GitHub Actions
+- Android Development
+- Cross-platform Development
