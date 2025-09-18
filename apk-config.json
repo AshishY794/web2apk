@@ -1,10 +1,10 @@
 {
-  "appName": "techingoad",
-  "appId": "com.techinfoi.app",
+  "appName": "MyTestApk",
+  "appId": "com.apktest.app",
   "version": "5.5.5",
-  "description": "yrda",
+  "description": "Test thennew apk",
   "icon": {
-    "enabled": true,
+    "enabled": false,
     "path": "www/icon.png"
   },
   "splash": {
