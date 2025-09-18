@@ -166,6 +166,8 @@ www/
 ├── index.html          ← Your main page
 ├── style.css           ← Your styles
 ├── script.js           ← Your JavaScript
+├── icon.png            ← App icon (for Capacitor)
+├── splash.png          ← Splash screen (for Capacitor)
 ├── images/             ← Your pictures
 │   ├── logo.png
 │   └── background.jpg
