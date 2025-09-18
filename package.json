@@ -12,12 +12,10 @@
     "open": "npx cap open android",
     "github-setup": "node scripts/github-setup.js",
     "update-config": "node scripts/update-config.js",
-    "web2apk": "node web2apk.js",
-    "web2app": "node web2app.js"
+    "web2apk": "node web2apk.js"
   },
   "bin": {
-    "web2apk": "./web2apk.js",
-    "web2app": "./web2app.js"
+    "web2apk": "./web2apk.js"
   },
   "keywords": [
     "capacitor",

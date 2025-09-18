@@ -49,8 +49,8 @@
 
 ## 📋 Table of Contents
 
-| **Section** | **Description** |
-|:------------|:----------------|
+| Section | Description |
+|---------|-------------|
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
 | [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
@@ -524,14 +524,14 @@ web2apk : The term 'web2apk' is not recognized as the name of a cmdlet, function
 
 **Fix:**
 ```bash
-# Everyone can use npm (works on all platforms)
-npm run web2apk
-
 # Windows PowerShell/Command Prompt (use .\ before the command)
 .\web2apk.bat
 
 # Mac/Linux (use ./ before the command)
 ./web2apk.sh
+
+# Or everyone can use npm (no .\ or ./ needed)
+npm run web2apk
 ```
 
 **Why this happens:** Windows PowerShell doesn't run scripts from the current directory by default for security reasons.
