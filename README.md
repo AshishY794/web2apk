@@ -125,7 +125,10 @@
 git clone https://github.com/AshishY794/web2apk.git
 cd web2apk
 
-# Step 2: Run the automated setup (dependencies install automatically!)
+# Step 2: Install dependencies (IMPORTANT!)
+npm install
+
+# Step 3: Run the automated setup
 npm run web2apk
 ```
 
@@ -147,16 +150,7 @@ cd web2apk
 
 **What this does:** Downloads all the tools you need to turn websites into apps!
 
-#### **Step 2: Install Dependencies** 📦
-```bash
-# Dependencies will install automatically when you run the setup
-# But you can also install them manually if needed:
-npm install
-```
-
-**What this does:** Installs all required packages (fs-extra, chalk, ora, etc.) for the Web2APK tool to work!
-
-#### **Step 3: Check Your GitHub Account** 🔐
+#### **Step 2: Check Your GitHub Account** 🔐
 ```bash
 # Check if you're logged in to GitHub
 gh auth status
@@ -169,7 +163,7 @@ gh auth login
 
 **If you get an error:** Don't worry! See the "Problems and Solutions" section below! 😊
 
-#### **Step 4: Add Your Website** 🌐
+#### **Step 3: Add Your Website** 🌐
 Put your website project files in the `www` folder inside your `web2apk` project:
 
 ```bash
@@ -212,7 +206,7 @@ www/
     └── custom-font.ttf
 ```
 
-#### **Step 5: Make It Your Own** 🏠
+#### **Step 4: Make It Your Own** 🏠
 ```bash
 # Remove the old connection
 git remote remove origin
@@ -223,7 +217,7 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 
 **What this does:** Connects your project to your own GitHub account instead of the original one.
 
-#### **Step 6: Customize Your App** 🎨
+#### **Step 5: Customize Your App** 🎨
 Edit the `apk-config.json` file to make your app special:
 
 ```json
@@ -260,7 +254,7 @@ Edit the `apk-config.json` file to make your app special:
 - **`splash.png`** → Creates the loading screen shown when your app starts
 - **Both files** → Capacitor automatically processes them into native Android resources
 
-#### **Step 7: Send It to GitHub** 🚀
+#### **Step 6: Send It to GitHub** 🚀
 ```bash
 # Add all your files
 git add .
@@ -274,7 +268,7 @@ git push origin main
 
 **What this does:** Saves your website to GitHub and starts building your app automatically!
 
-#### **Step 8: Get Your App!** 📱
+#### **Step 7: Get Your App!** 📱
 ```bash
 # Check if your app is ready and download it
 npm run web2apk getapk
@@ -586,7 +580,10 @@ Error: Cannot find module 'fs-extra'
 # Make sure you're in the project directory
 cd web2apk
 
-# Run the command (dependencies install automatically!)
+# Install all dependencies
+npm install
+
+# Then run the command
 npm run web2apk
 ```
 
@@ -594,7 +591,8 @@ npm run web2apk
 ```bash
 git clone https://github.com/AshishY794/web2apk.git
 cd web2apk
-npm run web2apk      # ← Dependencies install automatically!
+npm install          # ← This step is IMPORTANT!
+npm run web2apk
 ```
 
 ### **Problem 12: "Repository not found"** ❌
