@@ -169,7 +169,15 @@ cd web2apk
 
 **What this does:** Downloads all the tools you need to turn websites into apps!
 
-#### **Step 2: Check Your GitHub Account** 🔐
+#### **Step 2: Install Dependencies** 📦
+```bash
+# Install all the required packages
+npm install
+```
+
+**What this does:** Installs all the necessary tools and dependencies needed to build your APK!
+
+#### **Step 3: Check Your GitHub Account** 🔐
 ```bash
 # Check if you're logged in to GitHub
 gh auth status
@@ -182,7 +190,7 @@ gh auth login
 
 **If you get an error:** Don't worry! See the "Problems and Solutions" section below! 😊
 
-#### **Step 3: Add Your Website** 🌐
+#### **Step 4: Add Your Website** 🌐
 Put your website project files in the `www` folder inside your `web2apk` project:
 
 ```bash
@@ -225,7 +233,7 @@ www/
     └── custom-font.ttf
 ```
 
-#### **Step 4: Make It Your Own** 🏠
+#### **Step 5: Make It Your Own** 🏠
 ```bash
 # Remove the old connection
 git remote remove origin
@@ -254,7 +262,7 @@ git config user.email "your.email@example.com"
 
 **What this does:** Ensures your commits show YOUR name, not the template author's name!
 
-#### **Step 5: Customize Your App** 🎨
+#### **Step 6: Customize Your App** 🎨
 Edit the `apk-config.json` file to make your app special:
 
 ```json
@@ -291,11 +299,11 @@ Edit the `apk-config.json` file to make your app special:
 - **`splash.png`** → Creates the loading screen shown when your app starts
 - **Both files** → Capacitor automatically processes them into native Android resources
 
-#### **Step 6: Send It to GitHub** 🚀
+#### **Step 7: Send It to GitHub** 🚀
 
 **✅ Git Identity Already Set Up!** 🔐
 
-You already set up your Git identity in Step 4.5, so your commits will show YOUR name, not the template author's name!
+You already set up your Git identity in Step 5, so your commits will show YOUR name, not the template author's name!
 
 **Push your changes:**
 ```bash
@@ -314,7 +322,7 @@ git push origin main
 - Your commits will show your name instead of the template author
 - GitHub Actions will start building your APK
 
-#### **Step 7: Get Your App!** 📱
+#### **Step 8: Get Your App!** 📱
 ```bash
 # Check if your app is ready and download it
 npm run web2apk getapk
