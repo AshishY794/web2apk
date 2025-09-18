@@ -1,7 +1,7 @@
 {
-  "name": "com-ogappgame-app",
-  "version": "9.9.9",
-  "description": "Tes te ad",
+  "name": "my-web2apk-project",
+  "version": "1.0.0",
+  "description": "Convert your website to Android APK",
   "main": "index.js",
   "scripts": {
     "buildapk": "node scripts/build-apk.js",
