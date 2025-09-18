@@ -49,8 +49,8 @@
 
 ## 📋 Table of Contents
 
-| Section | Description |
-|---------|-------------|
+| **Section** | **Description** |
+|:------------|:----------------|
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
 | [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
