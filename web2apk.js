@@ -588,22 +588,22 @@ async function setupGitUserConfig() {
     let userName = '';
     let userEmail = '';
     
-    // Try to get username from system
-    try {
-      userName = process.env.USERNAME || process.env.USER || 'User';
-    } catch (e) {
-      userName = 'User';
-    }
-    
-    // Try to get email from GitHub CLI if available
+    // Try to get user details from GitHub CLI first
     try {
       const ghCommand = getGitHubCLICommand();
       const ghUser = execSync(`${ghCommand} api user`, { encoding: 'utf8' });
       const userData = JSON.parse(ghUser);
+      
+      // Use GitHub username (login) instead of full name
+      userName = userData.login || userData.name || 'User';
       userEmail = userData.email || `${userName.toLowerCase()}@example.com`;
-      userName = userData.name || userName;
     } catch (e) {
-      // Fallback to system username
+      // Fallback to system username if GitHub CLI fails
+      try {
+        userName = process.env.USERNAME || process.env.USER || 'User';
+      } catch (e2) {
+        userName = 'User';
+      }
       userEmail = `${userName.toLowerCase()}@example.com`;
     }
     
