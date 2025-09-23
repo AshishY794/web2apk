@@ -28,7 +28,7 @@ async function githubSetup() {
     console.log(chalk.yellow('\n1. Push your code to GitHub:'));
     console.log(chalk.cyan('   git add .'));
     console.log(chalk.cyan('   git commit -m "Add Web2App converter"'));
-    console.log(chalk.cyan('   git push origin main'));
+    console.log(chalk.cyan('   git push origin main  # (or master, depending on your repo)'));
     
     console.log(chalk.yellow('\n2. Check the Actions tab in your GitHub repository'));
     console.log(chalk.yellow('\n3. Your APK will be built automatically!'));

@@ -11,6 +11,71 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+// Function to detect the correct branch name (master or main)
+function getCurrentBranchName() {
+  try {
+    // Get current branch name
+    const currentBranch = execSync('git branch --show-current', { 
+      stdio: 'pipe',
+      encoding: 'utf8'
+    }).trim();
+    
+    // Also check what the default branch is on remote
+    try {
+      const defaultBranch = execSync('git symbolic-ref refs/remotes/origin/HEAD', { 
+        stdio: 'pipe',
+        encoding: 'utf8'
+      }).replace('refs/remotes/origin/', '').trim();
+      
+      // If we have a default branch from remote, prefer that
+      if (defaultBranch && (defaultBranch === 'master' || defaultBranch === 'main')) {
+        return defaultBranch;
+      }
+    } catch (e) {
+      // If we can't get remote default, continue with current branch
+    }
+    
+    // Return current branch if it's master or main
+    if (currentBranch === 'master' || currentBranch === 'main') {
+      return currentBranch;
+    }
+    
+    // Fallback to checking remote branches
+    try {
+      const remoteBranches = execSync('git branch -r', { 
+        stdio: 'pipe',
+        encoding: 'utf8'
+      });
+      
+      if (remoteBranches.includes('origin/master')) {
+        return 'master';
+      } else if (remoteBranches.includes('origin/main')) {
+        return 'main';
+      }
+    } catch (e) {
+      // Continue with fallback
+    }
+    
+    // Final fallback - try main first, then master
+    try {
+      execSync('git show-ref --verify --quiet refs/heads/main');
+      return 'main';
+    } catch (e) {
+      try {
+        execSync('git show-ref --verify --quiet refs/heads/master');
+        return 'master';
+      } catch (e) {
+        // Default to main as it's the modern standard
+        return 'main';
+      }
+    }
+  } catch (error) {
+    // If all else fails, default to main
+    console.log(chalk.yellow('⚠️  Could not detect branch name, defaulting to main'));
+    return 'main';
+  }
+}
+
 // Helper function to ask questions
 function askQuestion(question) {
   return new Promise((resolve) => {
@@ -299,6 +364,10 @@ async function updateVersionNumber() {
 async function pushUpdateToGitHub(ghCommand, newVersion) {
   console.log(chalk.blue('\n🚀 Pushing update to GitHub...'));
   
+  // Detect the correct branch name
+  const branchName = getCurrentBranchName();
+  console.log(chalk.gray(`🔧 Using branch: ${branchName}`));
+  
   const spinner = ora('Pushing changes...').start();
   
   try {
@@ -310,7 +379,7 @@ async function pushUpdateToGitHub(ghCommand, newVersion) {
     execSync(`git commit -m "${commitMessage}"`, { stdio: 'pipe' });
     
     // Push to GitHub
-    execSync('git push origin main', { stdio: 'pipe' });
+    execSync(`git push origin ${branchName}`, { stdio: 'pipe' });
     
     spinner.succeed(chalk.green('✅ Update pushed to GitHub successfully!'));
     console.log(chalk.blue('🔄 GitHub Actions is now building your updated APK...'));

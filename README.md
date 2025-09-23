@@ -383,9 +383,10 @@ npm run web2apk update
 1. 🔄 **Checks for Changes**: Automatically detects if any files in www/ folder have been modified
 2. 🎨 **Updates App Settings**: Optionally update app name, icon, splash screen, etc.
 3. 📦 **Increments Version**: Automatically updates version number (patch/minor/major)
-4. 🚀 **Pushes to GitHub**: Commits and pushes all changes to your repository
-5. ⏳ **Builds Updated APK**: Waits for GitHub Actions to build your updated app
-6. 📥 **Downloads APK**: Automatically downloads the updated APK with version details
+4. 🔧 **Auto-Detects Branch**: Automatically uses the correct branch name (master or main)
+5. 🚀 **Pushes to GitHub**: Commits and pushes all changes to your repository
+6. ⏳ **Builds Updated APK**: Waits for GitHub Actions to build your updated app
+7. 📥 **Downloads APK**: Automatically downloads the updated APK with version details
 
 ### **Update Workflow:**
 ```bash
@@ -420,6 +421,32 @@ downloads/
 ```
 
 ## 🚨 Problems and Solutions (Don't Worry!)
+
+### **Problem 0: "error: src refspec main does not match any"** ❌
+
+**What you see:**
+```
+❌ Failed to push update: Command failed: git push origin main
+error: src refspec main does not match any
+```
+
+**Solution:** This is now automatically fixed! 🎉
+
+**What happens automatically:**
+- ✅ **Auto-detects branch name** - Script automatically detects if you use `master` or `main`
+- ✅ **Uses correct branch** - Pushes to the right branch without errors
+- ✅ **Works with all repos** - Compatible with both old (`master`) and new (`main`) repositories
+
+**If you still see this error:**
+```bash
+# Check your current branch
+git branch
+
+# Push to the correct branch manually
+git push origin master  # or git push origin main
+```
+
+**Why this happened:** Older GitHub repositories use `master` as default, newer ones use `main`. The script now handles both automatically!
 
 ### **Problem 1: "GitHub CLI is not installed"** ❌
 

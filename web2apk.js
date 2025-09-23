@@ -13,6 +13,71 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+// Function to detect the correct branch name (master or main)
+function getCurrentBranchName() {
+  try {
+    // Get current branch name
+    const currentBranch = execSync('git branch --show-current', { 
+      stdio: 'pipe',
+      encoding: 'utf8'
+    }).trim();
+    
+    // Also check what the default branch is on remote
+    try {
+      const defaultBranch = execSync('git symbolic-ref refs/remotes/origin/HEAD', { 
+        stdio: 'pipe',
+        encoding: 'utf8'
+      }).replace('refs/remotes/origin/', '').trim();
+      
+      // If we have a default branch from remote, prefer that
+      if (defaultBranch && (defaultBranch === 'master' || defaultBranch === 'main')) {
+        return defaultBranch;
+      }
+    } catch (e) {
+      // If we can't get remote default, continue with current branch
+    }
+    
+    // Return current branch if it's master or main
+    if (currentBranch === 'master' || currentBranch === 'main') {
+      return currentBranch;
+    }
+    
+    // Fallback to checking remote branches
+    try {
+      const remoteBranches = execSync('git branch -r', { 
+        stdio: 'pipe',
+        encoding: 'utf8'
+      });
+      
+      if (remoteBranches.includes('origin/master')) {
+        return 'master';
+      } else if (remoteBranches.includes('origin/main')) {
+        return 'main';
+      }
+    } catch (e) {
+      // Continue with fallback
+    }
+    
+    // Final fallback - try main first, then master
+    try {
+      execSync('git show-ref --verify --quiet refs/heads/main');
+      return 'main';
+    } catch (e) {
+      try {
+        execSync('git show-ref --verify --quiet refs/heads/master');
+        return 'master';
+      } catch (e) {
+        // Default to main as it's the modern standard
+        return 'main';
+      }
+    }
+  } catch (error) {
+    // If all else fails, default to main
+    console.log(chalk.yellow('⚠️  Could not detect branch name, defaulting to main'));
+    return 'main';
+  }
+}
+
 // Helper function to ask questions
 function askQuestion(question) {
   return new Promise((resolve) => {
@@ -872,6 +937,10 @@ async function pushToGitHub(ghCommand = null) {
   const actualGhCommand = ghCommand || getGitHubCLICommand();
   console.log(chalk.gray(`🔧 Using GitHub CLI: ${actualGhCommand}`));
   
+  // Detect the correct branch name
+  const branchName = getCurrentBranchName();
+  console.log(chalk.gray(`🔧 Using branch: ${branchName}`));
+  
   const spinner = ora('Checking repository status...').start();
   
   try {
@@ -902,7 +971,7 @@ async function pushToGitHub(ghCommand = null) {
         spinner.text = 'Checking for existing files in repository...';
         try {
           // Use a timeout for the git ls-remote command
-          const filesOutput = execSync(`git ls-remote --heads origin main`, { 
+          const filesOutput = execSync(`git ls-remote --heads origin ${branchName}`, { 
             stdio: 'pipe',
             timeout: 10000 // 10 second timeout
           });
@@ -918,7 +987,7 @@ async function pushToGitHub(ghCommand = null) {
               spinner.text = 'Force pushing to replace all files...';
               execSync('git add .', { stdio: 'pipe' });
               execSync('git commit -m "Update: Replace all files with new website"', { stdio: 'pipe' });
-              execSync('git push origin main --force', { stdio: 'pipe' });
+              execSync(`git push origin ${branchName} --force`, { stdio: 'pipe' });
               
               spinner.succeed(chalk.green('✅ Successfully replaced all files in repository!'));
               console.log(chalk.blue('🔄 GitHub Actions is now building your APK...'));
@@ -962,7 +1031,7 @@ async function pushToGitHub(ghCommand = null) {
             // Push manually (ensure apk-config.json and other files are staged)
             try { execSync('git add .', { stdio: 'pipe' }); } catch(_) {}
             try { execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' }); } catch(_) {}
-            execSync('git push origin main', { stdio: 'pipe' });
+            execSync(`git push origin ${branchName}`, { stdio: 'pipe' });
             
             spinner.succeed(chalk.green('✅ Created GitHub repository and pushed successfully!'));
             console.log(chalk.blue('🔄 GitHub Actions is now building your APK...'));
@@ -989,7 +1058,7 @@ async function pushToGitHub(ghCommand = null) {
     try { execSync('git commit -m "Initial commit: Convert website to Android app"', { stdio: 'pipe' }); } catch(_) {}
     
     spinner.text = 'Pushing to GitHub...';
-    execSync('git push origin main', { stdio: 'pipe' });
+    execSync(`git push origin ${branchName}`, { stdio: 'pipe' });
     
     spinner.succeed(chalk.green('✅ Successfully pushed to GitHub!'));
     console.log(chalk.blue('🔄 GitHub Actions is now building your APK...'));
@@ -1463,7 +1532,7 @@ async function pushUpdateToGitHub(ghCommand, newVersion) {
     execSync(`git commit -m "${commitMessage}"`, { stdio: 'pipe' });
     
     // Push to GitHub
-    execSync('git push origin main', { stdio: 'pipe' });
+    execSync(`git push origin ${branchName}`, { stdio: 'pipe' });
     
     spinner.succeed(chalk.green('✅ Update pushed to GitHub successfully!'));
     console.log(chalk.blue('🔄 GitHub Actions is now building your updated APK...'));
