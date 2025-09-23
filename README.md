@@ -348,6 +348,36 @@ Once you've created your initial app, you can easily update it with new changes:
 npm run web2apk update
 ```
 
+### **📋 APK Update Process Table**
+
+| Step | Action | Command | What Happens | Expected Time |
+|------|--------|---------|--------------|---------------|
+| 1 | **Make Changes** | Edit files in `www/` folder | Modify your website content, styles, or scripts | 1-10 minutes |
+| 2 | **Start Update** | `npm run web2apk update` | Detects changes and prepares update | 10-30 seconds |
+| 3 | **Version Choice** | Choose update type | Select patch/minor/major/custom version | 5 seconds |
+| 4 | **Git Push** | Automatic commit & push | Pushes changes to GitHub repository | 30-60 seconds |
+| 5 | **Build Process** | GitHub Actions builds APK | Cloud builds your updated Android app | 5-15 minutes |
+| 6 | **Download APK** | Automatic download | Downloads updated APK to `downloads/` folder | 1-2 minutes |
+| 7 | **Install Update** | Install on device | Install new APK over old version | 1 minute |
+
+### **🔄 Update Types**
+
+| Update Type | Version Change | When to Use | Example |
+|-------------|----------------|-------------|---------|
+| **Patch** | 1.0.0 → 1.0.1 | Bug fixes, small improvements | Fix typos, update colors |
+| **Minor** | 1.0.0 → 1.1.0 | New features, backward compatible | Add new pages, new functionality |
+| **Major** | 1.0.0 → 2.0.0 | Big changes, may break compatibility | Complete redesign, major features |
+| **Custom** | Any version | Specific version number | 1.2.5, 2.0.3, etc. |
+
+### **📁 File Organization After Updates**
+
+| File Location | Description | Example |
+|---------------|-------------|---------|
+| `downloads/app-debug.apk` | Original APK (first build) | Initial app version |
+| `downloads/app-update-v1.0.1.apk` | Updated APK with version | Patch update APK |
+| `downloads/app-update-v1.1.0.apk` | Updated APK with version | Minor update APK |
+| `downloads/app-update-v1.1.0/` | Version folder | Contains version details |
+
 ### **What the Update Command Does:**
 1. 🔄 **Checks for Changes**: Automatically detects if any files in www/ folder have been modified
 2. 🎨 **Updates App Settings**: Optionally update app name, icon, splash screen, etc.
