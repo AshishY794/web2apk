@@ -13,6 +13,8 @@
     "github-setup": "node scripts/github-setup.js",
     "update-config": "node scripts/update-config.js",
     "web2apk": "node web2apk.js",
+    "update": "node web2apk.js update",
+    "update-app": "node scripts/update-app.js",
     "setup-git": "node setup-git-config.js"
   },
   "bin": {

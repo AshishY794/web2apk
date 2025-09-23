@@ -31,6 +31,7 @@
 - 🚀 **Super Easy Web to APK Conversion**: Just push your code and get an APK!
 - ☁️ **No Setup Required**: Everything happens in the cloud - no Android Studio needed!
 - 🤖 **Automatic APK Building**: Every time you update your website, you get a new app!
+- 🔄 **Easy App Updates**: Update your app with new changes using `web2apk update`
 - 📱 **Real Native Android App**: Works like any other app on your phone
 - 🎨 **Beautiful Examples**: Includes stunning examples to get you started
 - 🔄 **Live Build Updates**: See your APK build progress in real-time!
@@ -38,6 +39,7 @@
 - 🌐 **All Web Technologies**: Supports HTML, CSS, JavaScript, React, Vue, Angular, and more
 - 📦 **One-Click APK Download**: Get your APK file instantly when build completes
 - 🔧 **No Coding Required**: Perfect for beginners and professionals alike
+- 📁 **Versioned Downloads**: APK files are saved with version details for easy management
 
 ## 🎯 Who Can Use This?
 
@@ -336,6 +338,55 @@ npm run web2apk getapk
 - 📥 Downloads your APK when it's ready
 - 🎉 Shows success message!
 
+## 🔄 Updating Your App
+
+Once you've created your initial app, you can easily update it with new changes:
+
+### **Quick Update Command**
+```bash
+# Update your app with latest changes
+npm run web2apk update
+```
+
+### **What the Update Command Does:**
+1. 🔄 **Checks for Changes**: Automatically detects if any files in www/ folder have been modified
+2. 🎨 **Updates App Settings**: Optionally update app name, icon, splash screen, etc.
+3. 📦 **Increments Version**: Automatically updates version number (patch/minor/major)
+4. 🚀 **Pushes to GitHub**: Commits and pushes all changes to your repository
+5. ⏳ **Builds Updated APK**: Waits for GitHub Actions to build your updated app
+6. 📥 **Downloads APK**: Automatically downloads the updated APK with version details
+
+### **Update Workflow:**
+```bash
+# 1. Make changes to your website files in the www/ folder
+# 2. Run the update command
+npm run web2apk update
+
+# 3. The system will automatically:
+#    - Check for changes in www/ folder
+#    - Show you what files were modified
+#    - Ask if you want to update app settings
+#    - Ask for version update type (patch/minor/major/custom)
+# 4. Wait for build and download
+# 5. Install the updated APK on your device!
+```
+
+### **Version Management:**
+- **Patch Update** (1.0.0 → 1.0.1): Small fixes and improvements
+- **Minor Update** (1.0.0 → 1.1.0): New features, backward compatible
+- **Major Update** (1.0.0 → 2.0.0): Big changes, might break compatibility
+- **Custom Version**: Enter your own version number
+
+### **Download Organization:**
+Updated APKs are saved with version details:
+```
+downloads/
+├── app-debug.apk                    ← Original APK
+├── app-update-v1.0.1.apk          ← Updated APK v1.0.1
+├── app-update-v1.1.0.apk          ← Updated APK v1.1.0
+└── app-update-v1.1.0/             ← Version details folder
+    └── app-update-v1.1.0.apk
+```
 
 ## 🚨 Problems and Solutions (Don't Worry!)
 

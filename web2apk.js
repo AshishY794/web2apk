@@ -63,6 +63,10 @@ async function main() {
       await setupGitUserConfigManual();
       rl.close();
       break;
+    case 'update':
+      await updateApp();
+      rl.close();
+      break;
     case 'enter':
     case undefined:
     default:
@@ -588,22 +592,22 @@ async function setupGitUserConfig() {
     let userName = '';
     let userEmail = '';
     
-    // Try to get username from system
-    try {
-      userName = process.env.USERNAME || process.env.USER || 'User';
-    } catch (e) {
-      userName = 'User';
-    }
-    
-    // Try to get email from GitHub CLI if available
+    // Try to get user details from GitHub CLI first
     try {
       const ghCommand = getGitHubCLICommand();
       const ghUser = execSync(`${ghCommand} api user`, { encoding: 'utf8' });
       const userData = JSON.parse(ghUser);
+      
+      // Use GitHub username (login) instead of full name
+      userName = userData.login || userData.name || 'User';
       userEmail = userData.email || `${userName.toLowerCase()}@example.com`;
-      userName = userData.name || userName;
     } catch (e) {
-      // Fallback to system username
+      // Fallback to system username if GitHub CLI fails
+      try {
+        userName = process.env.USERNAME || process.env.USER || 'User';
+      } catch (e2) {
+        userName = 'User';
+      }
       userEmail = `${userName.toLowerCase()}@example.com`;
     }
     
@@ -1254,11 +1258,396 @@ async function downloadAPK(owner, repo, runId, ghCommand) {
   }
 }
 
+async function updateApp() {
+  console.log(chalk.blue('🔄 Web2APK Update - Updating your Android app!'));
+  console.log(chalk.yellow('🎯 This will update your app with any changes you made to your website files.'));
+  console.log('');
+
+  try {
+    // Step 1: Check if we're in the right directory and have existing config
+    await checkUpdatePrerequisites();
+
+    // Step 2: Check GitHub CLI
+    const ghCommand = await checkAndSetupGitHubCLI();
+
+    // Step 3: Update website files if needed
+    await updateWebsiteFiles();
+
+    // Step 4: Update app configuration if needed
+    await updateAppConfiguration();
+
+    // Step 5: Update version number
+    const newVersion = await updateVersionNumber();
+
+    // Step 6: Push changes to GitHub
+    await pushUpdateToGitHub(ghCommand, newVersion);
+
+    // Step 7: Wait for build and download updated APK
+    await waitForUpdateBuildAndDownload(newVersion);
+
+    // Success!
+    console.log(chalk.green('\n🎉🎉🎉 UPDATE SUCCESSFUL! 🎉🎉🎉'));
+    console.log(chalk.blue('Your app has been updated with the latest changes!'));
+    console.log(chalk.cyan('📱 Check the downloads/ folder for your updated APK file!'));
+    console.log(chalk.yellow('📲 You can now install the updated APK on your Android device!'));
+
+  } catch (error) {
+    console.log(chalk.red('\n❌ Update failed: ' + error.message));
+    console.log(chalk.yellow('💡 Don\'t worry! You can try again or ask for help.'));
+  }
+}
+
+async function checkUpdatePrerequisites() {
+  const spinner = ora('Checking update prerequisites...').start();
+  
+  try {
+    // Check if we're in the right directory
+    if (!await fs.pathExists('package.json')) {
+      throw new Error('Please run this command from the web2apk directory');
+    }
+
+    // Check if apk-config.json exists
+    if (!await fs.pathExists('apk-config.json')) {
+      throw new Error('No apk-config.json found. Please run "web2apk" first to create your initial app.');
+    }
+
+    // Check if www directory exists
+    if (!await fs.pathExists('www')) {
+      throw new Error('No www directory found. Please run "web2apk" first to create your initial app.');
+    }
+
+    // Check if git repository exists
+    if (!await fs.pathExists('.git')) {
+      throw new Error('No Git repository found. Please run "web2apk" first to create your initial app.');
+    }
+
+    spinner.succeed(chalk.green('✅ Update prerequisites check passed!'));
+  } catch (error) {
+    spinner.fail(chalk.red('❌ ' + error.message));
+    throw error;
+  }
+}
+
+async function updateWebsiteFiles() {
+  console.log(chalk.blue('\n📁 Checking for website file changes in www/ folder...'));
+  
+  try {
+    // Check if www directory exists
+    if (!await fs.pathExists('www')) {
+      console.log(chalk.yellow('⚠️  No www directory found. Skipping file updates.'));
+      return;
+    }
+
+    // Check for uncommitted changes in www folder
+    const hasChanges = await checkForUncommittedChanges();
+    
+    if (hasChanges) {
+      console.log(chalk.green('✅ Changes detected in www/ folder!'));
+      console.log(chalk.blue('📝 The following files have been modified:'));
+      
+      // Show what files changed
+      try {
+        const gitStatus = execSync('git status --porcelain www/', { encoding: 'utf8' });
+        const changedFiles = gitStatus.split('\n')
+          .filter(line => line.trim())
+          .map(line => line.substring(3).trim()); // Remove status indicators
+        
+        if (changedFiles.length > 0) {
+          changedFiles.forEach(file => {
+            console.log(chalk.gray(`  📄 ${file}`));
+          });
+        }
+      } catch (e) {
+        console.log(chalk.gray('  📄 Files in www/ folder have been modified'));
+      }
+      
+      console.log(chalk.green('✅ Website files are ready for update!'));
+    } else {
+      console.log(chalk.yellow('⚠️  No changes detected in www/ folder.'));
+      console.log(chalk.blue('💡 Make changes to your files in the www/ directory and run update again.'));
+      
+      const continueChoice = await askQuestion('Do you want to continue with the update anyway? (y/n): ');
+      if (continueChoice.toLowerCase() !== 'y' && continueChoice.toLowerCase() !== 'yes') {
+        console.log(chalk.blue('📁 Skipping update due to no changes.'));
+        return;
+      }
+    }
+    
+  } catch (error) {
+    console.log(chalk.red('❌ Failed to check website files: ' + error.message));
+    throw error;
+  }
+}
+
+async function checkForUncommittedChanges() {
+  try {
+    // Check if there are any uncommitted changes in www folder
+    const gitStatus = execSync('git status --porcelain www/', { encoding: 'utf8' });
+    return gitStatus.trim().length > 0;
+  } catch (error) {
+    // If git command fails, assume there are changes
+    console.log(chalk.gray('Could not check git status, assuming changes exist.'));
+    return true;
+  }
+}
+
+async function updateAppConfiguration() {
+  console.log(chalk.blue('\n🎨 Checking for app configuration updates...'));
+  
+  const configChoice = await askQuestion('Do you want to update your app settings (name, icon, splash, etc.)? (y/n): ');
+  
+  if (configChoice.toLowerCase() === 'y' || configChoice.toLowerCase() === 'yes') {
+    await customizeAppSettings();
+  } else {
+    console.log(chalk.blue('📱 Keeping existing app configuration.'));
+  }
+}
+
+async function updateVersionNumber() {
+  console.log(chalk.blue('\n📦 Updating version number...'));
+  
+  try {
+    // Read current config
+    const config = await fs.readJson('apk-config.json');
+    const currentVersion = config.version || '1.0.0';
+    
+    console.log(chalk.cyan(`Current version: ${currentVersion}`));
+    
+    const versionChoice = await askQuestion('How do you want to update the version? (patch/minor/major/custom): ');
+    
+    let newVersion;
+    const [major, minor, patch] = currentVersion.split('.').map(Number);
+    
+    switch (versionChoice.toLowerCase()) {
+      case 'patch':
+        newVersion = `${major}.${minor}.${patch + 1}`;
+        break;
+      case 'minor':
+        newVersion = `${major}.${minor + 1}.0`;
+        break;
+      case 'major':
+        newVersion = `${major + 1}.0.0`;
+        break;
+      case 'custom':
+        newVersion = await askQuestion('Enter new version (e.g., 1.2.3): ');
+        break;
+      default:
+        newVersion = `${major}.${minor}.${patch + 1}`;
+        console.log(chalk.yellow('Invalid choice, using patch update.'));
+    }
+    
+    // Update config
+    config.version = newVersion;
+    await fs.writeJson('apk-config.json', config, { spaces: 2 });
+    
+    console.log(chalk.green(`✅ Version updated to: ${newVersion}`));
+    return newVersion;
+    
+  } catch (error) {
+    console.log(chalk.red('❌ Failed to update version: ' + error.message));
+    return '1.0.1'; // Fallback version
+  }
+}
+
+async function pushUpdateToGitHub(ghCommand, newVersion) {
+  console.log(chalk.blue('\n🚀 Pushing update to GitHub...'));
+  
+  const spinner = ora('Pushing changes...').start();
+  
+  try {
+    // Add all changes
+    execSync('git add .', { stdio: 'pipe' });
+    
+    // Commit with update message
+    const commitMessage = `Update: Version ${newVersion} - App update with latest changes`;
+    execSync(`git commit -m "${commitMessage}"`, { stdio: 'pipe' });
+    
+    // Push to GitHub
+    execSync('git push origin main', { stdio: 'pipe' });
+    
+    spinner.succeed(chalk.green('✅ Update pushed to GitHub successfully!'));
+    console.log(chalk.blue('🔄 GitHub Actions is now building your updated APK...'));
+    
+  } catch (error) {
+    spinner.fail(chalk.red('❌ Failed to push update: ' + error.message));
+    throw error;
+  }
+}
+
+async function waitForUpdateBuildAndDownload(newVersion) {
+  console.log(chalk.blue('\n⏳ Waiting for your updated APK to be built...'));
+  console.log(chalk.yellow('This usually takes 5-15 minutes. We\'ll check every 10 seconds.'));
+  console.log(chalk.cyan('🔨 Building updated APK...'));
+  
+  // Wait a bit for the workflow to start
+  await new Promise(resolve => setTimeout(resolve, 10000));
+  
+  try {
+    // Get repository info
+    const remoteUrl = execSync('git remote get-url origin', { encoding: 'utf8' }).trim();
+    const repoMatch = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
+    
+    if (!repoMatch) {
+      throw new Error('Could not determine GitHub repository from git remote.');
+    }
+
+    const [, owner, repo] = repoMatch;
+    const repoName = repo.replace('.git', '');
+    
+    // Get GitHub CLI command
+    const ghCommand = getGitHubCLICommand();
+    
+    // Get workflow status
+    const workflowStatus = await getWorkflowStatus(owner, repoName, ghCommand);
+    
+    if (workflowStatus.status === 'completed' && workflowStatus.conclusion === 'success') {
+      console.log(chalk.green('✅ Update build already completed! Downloading APK...'));
+      await downloadUpdatedAPK(owner, repoName, workflowStatus.runId, ghCommand, newVersion);
+    } else {
+      console.log(chalk.blue('🔄 Update build in progress, waiting for completion...'));
+      await waitForUpdateBuildCompletion(owner, repoName, workflowStatus.runId, ghCommand, newVersion);
+    }
+
+  } catch (error) {
+    console.log(chalk.yellow('⚠️  Could not automatically download updated APK: ' + error.message));
+    console.log(chalk.blue('💡 You can manually download it from GitHub Actions when ready.'));
+    console.log(chalk.blue('🔗 Go to: https://github.com/' + (repoMatch ? repoMatch[1] + '/' + repoMatch[2].replace('.git', '') : 'your-repo') + '/actions'));
+  }
+}
+
+async function waitForUpdateBuildCompletion(owner, repo, runId, ghCommand, newVersion) {
+  console.log(chalk.yellow('\n🔄 Waiting for update build to complete...'));
+  console.log(chalk.blue('⏱️  Checking every 10 seconds for updates...\n'));
+  
+  let attempts = 0;
+  const maxAttempts = 180; // 30 minutes max wait time
+  
+  while (attempts < maxAttempts) {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      attempts++;
+      
+      const output = execSync(`${ghCommand} run view ${runId} --repo ${owner}/${repo} --json status,conclusion,createdAt,updatedAt`, { 
+        encoding: 'utf8',
+        stdio: 'pipe'
+      });
+      
+      const runData = JSON.parse(output);
+      const status = runData.status;
+      const conclusion = runData.conclusion;
+      const createdAt = new Date(runData.createdAt);
+      
+      const now = new Date();
+      const elapsedMinutes = Math.floor((now - createdAt) / (1000 * 60));
+      
+      let statusMessage = 'Building updated APK...';
+      if (elapsedMinutes > 2) statusMessage = 'Finalizing update...';
+      
+      process.stdout.write(`\r${chalk.blue('🔨')} ${statusMessage} ${chalk.gray(`(${elapsedMinutes}min elapsed)`)}`);
+      
+      if (status === 'completed') {
+        console.log('\n');
+        
+        if (conclusion === 'success') {
+          console.log(chalk.green('✅ Update build completed successfully!'));
+          console.log(chalk.blue('📥 Downloading updated APK...'));
+          
+          await downloadUpdatedAPK(owner, repo, runId, ghCommand, newVersion);
+          
+          console.log(chalk.green('\n🎉 Updated APK ready! Build and download completed successfully!'));
+          console.log(chalk.cyan('📱 You can now install the updated APK on your Android device.'));
+          return;
+          
+        } else if (conclusion === 'failure') {
+          console.log(chalk.red('\n❌ Update build failed!'));
+          console.log(chalk.red(`🔗 View error details: https://github.com/${owner}/${repo}/actions/runs/${runId}`));
+          return;
+          
+        } else {
+          console.log(chalk.yellow(`\n⚠️  Update build completed with status: ${conclusion}`));
+          return;
+        }
+      }
+      
+    } catch (error) {
+      console.log(chalk.red(`\n❌ Error checking update build status: ${error.message}`));
+      return;
+    }
+  }
+  
+  console.log(chalk.yellow('\n⏰ Update build is taking longer than expected. You can check manually:'));
+  console.log(chalk.blue(`🔗 https://github.com/${owner}/${repo}/actions/runs/${runId}`));
+}
+
+async function downloadUpdatedAPK(owner, repo, runId, ghCommand, newVersion) {
+  try {
+    // Create downloads directory
+    await fs.ensureDir('downloads');
+    
+    // Create versioned subdirectory
+    const versionDir = `downloads/app-update-v${newVersion}`;
+    await fs.ensureDir(versionDir);
+    
+    // Download artifacts
+    const downloadPath = path.join(process.cwd(), versionDir);
+    execSync(`${ghCommand} run download ${runId} --repo ${owner}/${repo} --dir "${downloadPath}"`, { 
+      stdio: 'pipe' 
+    });
+    
+    // Find and move APK file with versioned name
+    const files = await fs.readdir(downloadPath);
+    let apkFile = null;
+    
+    for (const file of files) {
+      const filePath = path.join(downloadPath, file);
+      const stat = await fs.stat(filePath);
+    
+      if (stat.isDirectory()) {
+        const subFiles = await fs.readdir(filePath);
+        for (const subFile of subFiles) {
+          if (subFile.endsWith('.apk')) {
+            apkFile = path.join(filePath, subFile);
+            break;
+          }
+        }
+      } else if (file.endsWith('.apk')) {
+        apkFile = filePath;
+      }
+      
+      if (apkFile) break;
+    }
+    
+    if (apkFile) {
+      const finalApkPath = path.join(downloadPath, `app-update-v${newVersion}.apk`);
+      await fs.copy(apkFile, finalApkPath);
+      
+      // Also copy to main downloads folder with versioned name
+      const mainDownloadPath = path.join('downloads', `app-update-v${newVersion}.apk`);
+      await fs.copy(apkFile, mainDownloadPath);
+      
+      console.log(chalk.green(`✅ Updated APK downloaded: ${mainDownloadPath}`));
+      console.log(chalk.cyan(`📁 Version details folder: ${versionDir}`));
+      
+      // Show file size
+      const stats = await fs.stat(mainDownloadPath);
+      const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(2);
+      console.log(chalk.cyan(`📊 Updated APK Size: ${fileSizeInMB} MB`));
+      
+    } else {
+      console.log(chalk.yellow('⚠️  APK file not found in artifacts'));
+    }
+    
+  } catch (error) {
+    throw new Error('Failed to download updated APK: ' + error.message);
+  }
+}
+
 function showHelp() {
   console.log(chalk.blue('🚀 Web2APK - Fully Automated Website to Android App Converter'));
   console.log('');
   console.log(chalk.green('Commands:'));
   console.log('  web2apk           - Start fully automated setup (default)');
+  console.log('  web2apk update    - Update your existing app with new changes');
   console.log('  web2apk gitconfig - Set up Git user configuration manually');
   console.log('  web2apk help      - Show this help message');
   console.log('');
@@ -1271,6 +1660,14 @@ function showHelp() {
   console.log('6. 🎨 Customizes your app settings');
   console.log('7. 🚀 Pushes everything to GitHub');
   console.log('8. ⏳ Waits for build and downloads your APK');
+  console.log('');
+  console.log(chalk.blue('What web2apk update does:'));
+  console.log('1. 🔄 Updates your website files with latest changes');
+  console.log('2. 🎨 Updates app configuration if needed');
+  console.log('3. 📦 Increments version number');
+  console.log('4. 🚀 Pushes updates to GitHub');
+  console.log('5. ⏳ Waits for build and downloads updated APK');
+  console.log('6. 📁 Saves APK with version details in downloads folder');
   console.log('');
   console.log(chalk.yellow('📚 For more information, visit:'));
   console.log('https://github.com/AshishY794/web2apk');
