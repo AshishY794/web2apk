@@ -58,6 +58,7 @@
 | [🌟 What Can Be Converted to APK?](#-what-can-be-converted-to-apk) | See all supported project types |
 | [🚀 Super Easy Setup](#-super-easy-setup-choose-your-adventure) | Get started immediately |
 | [🎮 Adventure 2: Manual Step-by-Step](#-adventure-2-manual-step-by-step-learn-everything) | Learn everything step by step |
+| [🔄 Updating Your App](#-updating-your-app) | Update your APK with new changes |
 | [🚨 Problems and Solutions](#-problems-and-solutions-dont-worry) | Fix common issues |
 | [📋 What Happens After You Enter Your Settings](#-what-happens-after-you-enter-your-settings) | Detailed process explanation |
 | [🎨 Making Your App Look Amazing](#-making-your-app-look-amazing) | Icons, splash screens, and more |
